@@ -255,9 +255,11 @@ public/
 
 This plan is structured in **Epic → Task → Subtask** format. Tasks are sequenced to minimize blocking dependencies and enable parallel work streams where possible.
 
-### **Phase 0: Research & Technology Validation**
+### **Phase 0: Research & Technology Validation** (Optional)
 
 **Goal**: Resolve technical unknowns and document decisions before detailed design.
+
+**Note**: This phase is optional pre-implementation research. If technical decisions (e.g., Appwrite SDK patterns, GPS API behavior, form library evaluation) are already understood, proceed directly to Phase 1. Tasks.md assumes research decisions have been made and starts at Phase 1 (Setup).
 
 #### Epic 0.1: Appwrite SDK & Authentication Patterns
 - **Task 0.1.1**: Validate Appwrite Web SDK v16 compatibility with Next.js 15 App Router
