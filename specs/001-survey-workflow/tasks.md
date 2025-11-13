@@ -303,9 +303,9 @@
 
 - [x] T131 Review and test Appwrite permission rules for all collections
 - [x] T132 Implement password strength indicator in EnumeratorForm
-- [ ] T133 Add CSRF protection to all forms
+- [x] T133 Add CSRF protection to all forms
 - [x] T134 Verify no PII exposure in API responses (audit all endpoints)
-- [ ] T135 Test GPS coordinate precision (ensure privacy compliance)
+- [x] T135 Test GPS coordinate precision (ensure privacy compliance)
 
 ### Observability & Logging
 
