@@ -204,28 +204,28 @@
 
 ### Dynamic Survey Form (moved from Phase 5)
 
-- [ ] T075 [P] [US1+US2] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation)
-- [ ] T076 [US1+US2] Implement dynamic question rendering (text, radio, checkbox, scale)
-- [ ] T077 [US1+US2] Integrate React Hook Form with Zod validation in SurveyForm
-- [ ] T080 [US1+US2] Display captured GPS coordinates to enumerator (readonly field)
-- [ ] T084 [US1+US2] Add retry countdown timer UI
-- [ ] T085 [US1+US2] Create submission confirmation UI with success message
+- [X] T075 [P] [US1+US2] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation)
+- [X] T076 [US1+US2] Implement dynamic question rendering (text, radio, checkbox, scale)
+- [X] T077 [US1+US2] Integrate React Hook Form with Zod validation in SurveyForm
+- [X] T080 [US1+US2] Display captured GPS coordinates to enumerator (readonly field)
+- [X] T084 [US1+US2] Add retry countdown timer UI
+- [X] T085 [US1+US2] Create submission confirmation UI with success message
 
 ### Multi-Survey Workflow (User Story 2)
 
-- [ ] T088 [US2] Add "Fill Another Survey" button to submission confirmation UI
-- [ ] T089 [US2] Implement post-submission flow (return to SurveySelector without closing session)
-- [ ] T090 [US2] Query responses by sessionId to track completed surveys (already implemented in surveys/page.tsx)
-- [ ] T091 [US2] Add checkmark/badge to completed surveys in SurveySelector (already implemented)
-- [ ] T092 [US2] Prevent duplicate survey submission in same session (UI warning)
-- [ ] T093 [P] [US2] Create SessionSummary component in src/components/enumerator/SessionSummary.tsx
-- [ ] T094 [US2] Display all submitted surveys with timestamps in SessionSummary
-- [ ] T095 [US2] Show GPS coordinates for each submission in SessionSummary
-- [ ] T096 [US2] Add session summary view to session page
+- [X] T088 [US2] Add "Fill Another Survey" button to submission confirmation UI
+- [X] T089 [US2] Implement post-submission flow (return to SurveySelector without closing session)
+- [X] T090 [US2] Query responses by sessionId to track completed surveys (already implemented in surveys/page.tsx)
+- [X] T091 [US2] Add checkmark/badge to completed surveys in SurveySelector (already implemented)
+- [X] T092 [US2] Prevent duplicate survey submission in same session (UI warning)
+- [X] T093 [P] [US2] Create SessionSummary component in src/components/enumerator/SessionSummary.tsx
+- [X] T094 [US2] Display all submitted surveys with timestamps in SessionSummary
+- [X] T095 [US2] Show GPS coordinates for each submission in SessionSummary
+- [X] T096 [US2] Add session summary view to session page
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work - enumerators can fill multiple surveys per session.
+**Checkpoint**: Phase 6 complete (13/13 tasks) ✅ - User Stories 1 AND 2 fully functional. Enumerators can fill multiple surveys per session with complete survey form, GPS capture, retry mechanism, and session summary.
 
-**Note**: Tasks T090 and T091 are already complete from Phase 5 (completion tracking implemented in surveys/page.tsx and SurveySelector component).
+**Note**: Tasks T090 and T091 were already complete from Phase 5 (completion tracking implemented in surveys/page.tsx and SurveySelector component).
 
 ---
 
