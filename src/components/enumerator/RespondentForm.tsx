@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { createRespondent } from '@/lib/services/respondentService';
 import type { AgeRange, Sex, RespondentCreate } from '@/lib/types/respondent';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { FieldError, FormErrorAlert, RequiredIndicator } from '@/components/shared/FormErrors';
 
 // Validation schema with name-pattern blocking
 const respondentSchema = z.object({
@@ -99,33 +100,12 @@ export function RespondentForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Error Alert */}
-      {error && (
-        <div className="rounded-md bg-red-50 border border-red-200 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-red-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-red-800">{error}</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {error && <FormErrorAlert message={error} />}
 
       {/* Age Range */}
       <div>
         <label htmlFor="ageRange" className="block text-sm font-medium text-gray-700">
-          Age Range <span className="text-red-500">*</span>
+          Age Range <RequiredIndicator />
         </label>
         <select
           id="ageRange"
@@ -140,15 +120,13 @@ export function RespondentForm({
           <option value="55-64">55-64 years</option>
           <option value="65+">65+ years</option>
         </select>
-        {errors.ageRange && (
-          <p className="mt-1 text-sm text-red-600">{errors.ageRange.message}</p>
-        )}
+        <FieldError message={errors.ageRange?.message} />
       </div>
 
       {/* Sex */}
       <div>
         <label htmlFor="sex" className="block text-sm font-medium text-gray-700">
-          Sex <span className="text-red-500">*</span>
+          Sex <RequiredIndicator />
         </label>
         <select
           id="sex"
@@ -160,15 +138,13 @@ export function RespondentForm({
           <option value="F">Female</option>
           <option value="Other">Other</option>
         </select>
-        {errors.sex && (
-          <p className="mt-1 text-sm text-red-600">{errors.sex.message}</p>
-        )}
+        <FieldError message={errors.sex?.message} />
       </div>
 
       {/* Administrative Area */}
       <div>
         <label htmlFor="adminArea" className="block text-sm font-medium text-gray-700">
-          Administrative Area <span className="text-red-500">*</span>
+          Administrative Area <RequiredIndicator />
         </label>
         <input
           type="text"
@@ -180,9 +156,7 @@ export function RespondentForm({
         <p className="mt-1 text-xs text-gray-500">
           Use location identifiers only. Do not include personal names.
         </p>
-        {errors.adminArea && (
-          <p className="mt-1 text-sm text-red-600">{errors.adminArea.message}</p>
-        )}
+        <FieldError message={errors.adminArea?.message} />
       </div>
 
       {/* Consent Checkbox */}
@@ -198,7 +172,7 @@ export function RespondentForm({
           </div>
           <div className="ml-3 text-sm">
             <label htmlFor="consentGiven" className="font-medium text-gray-700">
-              Informed Consent <span className="text-red-500">*</span>
+              Informed Consent <RequiredIndicator />
             </label>
             <p className="text-gray-600">
               I confirm that the respondent has been informed about the survey purpose,
@@ -207,9 +181,7 @@ export function RespondentForm({
             </p>
           </div>
         </div>
-        {errors.consentGiven && (
-          <p className="mt-2 text-sm text-red-600">{errors.consentGiven.message}</p>
-        )}
+        <FieldError message={errors.consentGiven?.message} className="mt-2" />
       </div>
 
       {/* Form Actions */}

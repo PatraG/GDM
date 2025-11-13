@@ -10,6 +10,7 @@
 import type { Metadata } from 'next';
 import './app.css';
 import { Toaster } from '@/components/ui/sonner';
+import { NetworkStatus } from '@/components/shared/NetworkStatus';
 
 export const metadata: Metadata = {
   title: 'Oral Health Survey - Data Collection System',
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans antialiased">
+        <NetworkStatus />
         {children}
         <Toaster />
       </body>

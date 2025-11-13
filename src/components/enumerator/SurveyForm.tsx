@@ -25,6 +25,7 @@ import { captureGPSCoordinates, formatGPSCoordinates } from '@/lib/utils/gps';
 import { submitResponse } from '@/lib/services/responseService';
 import { RETRY_CONFIG } from '@/lib/appwrite/constants';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { FieldError, FormErrorAlert, RequiredIndicator } from '@/components/shared/FormErrors';
 
 interface SurveyFormProps {
   survey: SurveyWithQuestions;
@@ -301,12 +302,7 @@ export function SurveyForm({
             </p>
           </div>
         )}
-        {gpsError && (
-          <div className="rounded-md bg-red-50 p-3">
-            <p className="text-sm font-medium text-red-800">GPS Error</p>
-            <p className="mt-1 text-sm text-red-700">{gpsError}</p>
-          </div>
-        )}
+        {gpsError && <FormErrorAlert title="GPS Error" message={gpsError} />}
       </div>
 
       {/* Questions */}
@@ -392,11 +388,7 @@ function QuestionField({ question, register, watch, error }: QuestionFieldProps)
           <span className="text-sm font-medium text-gray-900">
             {question.questionText}
           </span>
-          {question.required && (
-            <span className="ml-1 text-red-600" title="Required">
-              *
-            </span>
-          )}
+          {question.required && <RequiredIndicator className="ml-1" />}
         </div>
 
         {/* Text Input */}
@@ -492,9 +484,7 @@ function QuestionField({ question, register, watch, error }: QuestionFieldProps)
       </label>
 
       {/* Error Message */}
-      {error && (
-        <p className="mt-2 text-sm text-red-600">{error.message}</p>
-      )}
+      <FieldError message={error?.message} className="mt-2" />
     </div>
   );
 }
