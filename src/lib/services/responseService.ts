@@ -19,6 +19,7 @@ import { COLLECTIONS, RETRY_CONFIG, RESPONSE_STATUS } from '@/lib/appwrite/const
 import type { Response, ResponseCreate, ResponseVoid } from '@/lib/types/response';
 import type { Answer, AnswerCreate } from '@/lib/types/response';
 import { Query } from 'appwrite';
+import { logger } from '@/lib/services/loggingService';
 
 /**
  * GPS coordinates for response
@@ -194,6 +195,19 @@ export async function submitResponse(
     // Create answer documents
     const answers = await createAnswerDocuments(response.$id, input.answers);
 
+    // Log successful survey submission
+    logger.survey.submitted(
+      response.$id,
+      input.surveyId,
+      input.enumeratorId,
+      {
+        respondentId: input.respondentId,
+        sessionId: input.sessionId,
+        gpsLatitude: input.gpsCoordinates.latitude,
+        gpsLongitude: input.gpsCoordinates.longitude,
+      }
+    );
+
     return { response, answers };
   };
 
@@ -212,6 +226,13 @@ export async function saveDraft(
 
   // Create answer documents
   const answers = await createAnswerDocuments(response.$id, input.answers);
+
+  // Log draft save
+  logger.survey.draftSaved(
+    response.$id,
+    input.surveyId,
+    input.enumeratorId
+  );
 
   return { response, answers };
 }
@@ -340,6 +361,13 @@ export async function voidResponse(
     COLLECTIONS.RESPONSES,
     responseId,
     updateData
+  );
+
+  // Log void action
+  logger.survey.voided(
+    responseId,
+    voidData.voidedBy,
+    voidData.voidReason.trim()
   );
 
   // TODO (T113): Create audit trail entry in a separate audit collection

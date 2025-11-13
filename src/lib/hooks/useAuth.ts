@@ -15,6 +15,7 @@ import type { Models } from 'appwrite';
 import type { User, LoginCredentials } from '@/lib/types/auth';
 import * as authService from '@/lib/appwrite/auth';
 import { SESSION_TIMEOUT_MS, SESSION_WARNING_MS } from '@/lib/appwrite/constants';
+import { logger } from '@/lib/services/loggingService';
 
 interface UseAuthReturn {
   /** Current authenticated user */
@@ -120,9 +121,16 @@ export function useAuth(): UseAuthReturn {
       } else {
         router.push('/dashboard/enumerator/home');
       }
+      
+      // Log successful login
+      logger.auth.loginSuccess(authSession.user.$id, credentials.email);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
       setError(errorMessage);
+      
+      // Log failed login
+      logger.auth.loginFailure(credentials.email, errorMessage);
+      
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -135,6 +143,12 @@ export function useAuth(): UseAuthReturn {
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
+      
+      // Log logout before clearing state
+      if (user) {
+        logger.auth.logout(user.$id, user.email);
+      }
+      
       await authService.logout();
       
       setSession(null);
@@ -151,7 +165,7 @@ export function useAuth(): UseAuthReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, [router, user]);
 
   /**
    * Refresh current session

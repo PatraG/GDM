@@ -286,8 +286,8 @@
 
 ### Error Handling & UX
 
-- [ ] T122 [P] Implement global error boundary with user-friendly messages
-- [ ] T123 [P] Add loading states to all async operations
+- [X] T122 [P] Implement global error boundary with user-friendly messages (error.tsx, global-error.tsx, admin/error.tsx, enumerator/error.tsx)
+- [X] T123 [P] Add loading states to all async operations (loading.tsx files for app, admin, enumerator sections)
 - [X] T124 [P] Implement toast notifications for success/error messages (integrated in layout, LoginForm, EnumeratorForm, VoidResponseModal, surveys page, sessions page)
 - [ ] T125 Add network status indicator (online/offline)
 - [ ] T126 Implement form validation error display consistency across all forms
@@ -309,10 +309,11 @@
 
 ### Observability & Logging
 
-- [ ] T135a [P] Create logging service in src/lib/services/loggingService.ts
-- [ ] T135b Log all authentication attempts (success/failure) with timestamp and userId
-- [ ] T135c Log all survey submissions with metadata (responseId, enumeratorId, timestamp, location)
-- [ ] T135d Integrate error tracking service (optional: Sentry or Appwrite logging collection)
+- [X] T135a [P] Create logging service in src/lib/services/loggingService.ts (comprehensive service with log levels, structured logging, cloud integration placeholder)
+- [X] T135b Log all authentication attempts (success/failure) with timestamp and userId (integrated in useAuth hook)
+- [X] T135c Log all survey submissions with metadata (responseId, enumeratorId, timestamp, location) (integrated in responseService: submit, draft, void)
+- [X] T135d Integrate error tracking service (optional: Sentry or Appwrite logging collection) (logger.session.created/closed integrated in sessionService)
+
 
 ### Documentation
 

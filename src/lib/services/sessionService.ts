@@ -22,6 +22,7 @@ import type {
   SessionCreate,
 } from '@/lib/types/session';
 import { Query } from 'appwrite';
+import { logger } from '@/lib/services/loggingService';
 
 // Re-export SessionStatus from constants since it's used in this service
 import { SessionStatus } from '@/lib/appwrite/constants';
@@ -55,6 +56,13 @@ export async function createSession(
 
   // Create document in database
   const document = await createDocument(COLLECTIONS.SESSIONS, documentData);
+
+  // Log session creation
+  logger.session.created(
+    document.$id,
+    input.enumeratorId,
+    input.respondentId
+  );
 
   return document as Session;
 }
@@ -173,6 +181,15 @@ export async function closeSession(
     sessionId,
     updates
   );
+
+  // Calculate session duration
+  const startTime = new Date(session.startTime).getTime();
+  const endTime = new Date(updates.endTime).getTime();
+  const duration = Math.floor((endTime - startTime) / 1000); // Duration in seconds
+
+  // Log session closure
+  const logReason = reason === 'completed' ? 'manual' : reason;
+  logger.session.closed(sessionId, logReason, duration);
 
   return document as Session;
 }
