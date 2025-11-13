@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "setup:appwrite": "tsx scripts/setup-appwrite.ts"
   },
   "dependencies": {
     "@appwrite.io/pink-icons": "^1.0.0",
@@ -34,18 +35,21 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
+    "node-appwrite": "^20.3.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
+      "eslint --fix --max-warnings=10",
       "prettier --write"
     ],
     "*.{json,md,css}": [
