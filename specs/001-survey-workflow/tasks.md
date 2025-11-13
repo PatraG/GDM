@@ -294,7 +294,7 @@
 
 ### Performance Optimization
 
-- [ ] T127 [P] Add React.memo to frequently re-rendered components
+- [x] T127 [P] Add React.memo to frequently re-rendered components
 - [ ] T128 Implement pagination for respondent and submission lists
 - [ ] T129 Add lazy loading for survey forms with many questions
 - [ ] T130 Optimize Appwrite queries with proper indexes (verify T026)
@@ -342,7 +342,7 @@
 - [ ] T152 Set up Vercel/Netlify deployment configuration
 - [ ] T153 Create production Appwrite project (if separate from dev)
 - [x] T154 Test production build locally
-- [ ] T155 Document rollback procedures
+- [x] T155 Document rollback procedures
 
 ---
 
