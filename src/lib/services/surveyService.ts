@@ -12,14 +12,18 @@
 import {
   listDocuments,
   getDocument,
+  createDocument,
+  updateDocument,
 } from '@/lib/appwrite/databases';
-import { COLLECTIONS } from '@/lib/appwrite/constants';
+import { COLLECTIONS, SURVEY_STATUS } from '@/lib/appwrite/constants';
 import type {
   Survey,
   SurveyWithQuestions,
   Question,
   Option,
   QuestionWithOptions,
+  SurveyCreate,
+  SurveyUpdate,
 } from '@/lib/types/survey';
 import { Query } from 'appwrite';
 
@@ -192,4 +196,139 @@ export async function validateSurveyActive(surveyId: string): Promise<void> {
       `Survey "${survey.title}" is not locked and cannot be used for data collection`
     );
   }
+}
+
+/**
+ * Create a new survey (admin only)
+ * Initial status defaults to 'draft'
+ * @param data Survey creation data
+ * @returns Created survey document
+ */
+export async function createSurvey(data: SurveyCreate): Promise<Survey> {
+  const surveyData = {
+    title: data.title,
+    description: data.description || '',
+    version: data.version || '1.0.0',
+    status: data.status || SURVEY_STATUS.DRAFT,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  const document = await createDocument(COLLECTIONS.SURVEYS, surveyData);
+  return document as Survey;
+}
+
+/**
+ * Update a survey (admin only)
+ * Implements version locking logic per FR-042:
+ * - If status is 'locked': can only update status to 'archived'
+ * - If status is 'archived': cannot make any updates
+ * - If status is 'draft': can update all fields
+ * 
+ * @param surveyId Survey ID to update
+ * @param data Survey update data
+ * @returns Updated survey document
+ * @throws Error if survey is locked/archived and trying to update non-status fields
+ */
+export async function updateSurvey(
+  surveyId: string,
+  data: SurveyUpdate
+): Promise<Survey> {
+  // Get current survey state
+  const currentSurvey = await getSurvey(surveyId);
+
+  // --- Version Locking Logic (T020a) ---
+  
+  // Rule 1: Archived surveys cannot be modified
+  if (currentSurvey.status === SURVEY_STATUS.ARCHIVED) {
+    throw new Error(
+      `Cannot modify archived survey "${currentSurvey.title}". Survey is permanently archived.`
+    );
+  }
+
+  // Rule 2: Locked surveys can only change status to 'archived'
+  if (currentSurvey.status === SURVEY_STATUS.LOCKED) {
+    // Check if trying to update fields other than status
+    const hasNonStatusUpdates =
+      data.title !== undefined ||
+      data.description !== undefined ||
+      data.version !== undefined;
+
+    if (hasNonStatusUpdates) {
+      throw new Error(
+        `Cannot modify locked survey "${currentSurvey.title}". Survey is locked for data collection. Only status transitions to 'archived' are allowed.`
+      );
+    }
+
+    // If updating status, it must be to 'archived'
+    if (data.status !== undefined && data.status !== SURVEY_STATUS.ARCHIVED) {
+      throw new Error(
+        `Cannot change locked survey status to '${data.status}'. Only transition to 'archived' is allowed.`
+      );
+    }
+  }
+
+  // Rule 3: Draft surveys can update all fields
+  // Rule 4: Validate status transitions
+  if (data.status !== undefined) {
+    const validTransitions: Record<string, string[]> = {
+      [SURVEY_STATUS.DRAFT]: [SURVEY_STATUS.LOCKED],
+      [SURVEY_STATUS.LOCKED]: [SURVEY_STATUS.ARCHIVED],
+      [SURVEY_STATUS.ARCHIVED]: [], // No transitions allowed from archived
+    };
+
+    const allowedStatuses = validTransitions[currentSurvey.status] || [];
+    
+    if (
+      data.status !== currentSurvey.status &&
+      !allowedStatuses.includes(data.status)
+    ) {
+      throw new Error(
+        `Invalid status transition from '${currentSurvey.status}' to '${data.status}'. Allowed transitions: ${allowedStatuses.join(', ') || 'none'}.`
+      );
+    }
+  }
+
+  // --- End Version Locking Logic ---
+
+  // Build update payload
+  const updateData: Partial<Survey> = {
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (data.title !== undefined) updateData.title = data.title;
+  if (data.description !== undefined) updateData.description = data.description;
+  if (data.version !== undefined) updateData.version = data.version;
+  if (data.status !== undefined) updateData.status = data.status;
+
+  // Perform update
+  const document = await updateDocument(
+    COLLECTIONS.SURVEYS,
+    surveyId,
+    updateData
+  );
+
+  return document as Survey;
+}
+
+/**
+ * Delete a survey (admin only)
+ * Can only delete surveys in 'draft' status
+ * Locked/archived surveys cannot be deleted to preserve data integrity
+ * 
+ * @param surveyId Survey ID to delete
+ * @throws Error if survey is locked or archived
+ */
+export async function deleteSurvey(surveyId: string): Promise<void> {
+  const survey = await getSurvey(surveyId);
+
+  if (survey.status !== SURVEY_STATUS.DRAFT) {
+    throw new Error(
+      `Cannot delete survey "${survey.title}" with status '${survey.status}'. Only draft surveys can be deleted.`
+    );
+  }
+
+  // Note: Actual deletion logic would need to handle cascading deletes
+  // for questions and options (to be implemented in Phase 8)
+  throw new Error('Survey deletion not yet implemented. Use archive instead.');
 }

@@ -63,7 +63,7 @@
 - [X] T018 Create `respondents` collection with schema: respondentId, pseudonym, ageRange, sex, adminArea, consentGiven, consentTimestamp, enumeratorId, createdAt
 - [X] T019 Create `sessions` collection with schema: sessionId, enumeratorId, startTime, endTime, status, createdAt, updatedAt
 - [X] T020 Create `surveys` collection with schema: surveyId, title, description, version, status, createdAt, updatedAt
-- [ ] T020a Implement survey version locking logic (status: draft/locked/archived; block edits when status=locked)
+- [X] T020a Implement survey version locking logic (status: draft/locked/archived; block edits when status=locked)
 - [X] T021 Create `questions` collection with schema: questionId, surveyId, questionText, questionType, required, order, createdAt
 - [X] T022 Create `options` collection with schema: optionId, questionId, optionText, value, order
 - [X] T023 Create `responses` collection with schema: responseId, sessionId, respondentId, surveyId, surveyVersion, location, status, submittedAt, voidedBy, voidReason, createdAt, updatedAt
@@ -84,7 +84,7 @@
 - [X] T032 [P] Create ErrorBoundary component in src/components/shared/ErrorBoundary.tsx
 - [X] T033 [P] Create LoadingSpinner component in src/components/shared/LoadingSpinner.tsx
 
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+**Checkpoint**: Phase 2 complete (25/25 tasks) ✅ - Foundation ready with all collections, services, utilities, shared components, and survey version locking logic. User story implementation can now begin in parallel.
 
 ---
 
@@ -175,24 +175,24 @@
 - [X] T072 [P] [US1] Create useSurveys hook in src/lib/hooks/useSurveys.ts (survey data fetching)
 - [X] T073 [US1] Create surveys page in src/app/(dashboard)/enumerator/surveys/page.tsx
 - [X] T074 [P] [US1] Create SurveySelector component in src/components/enumerator/SurveySelector.tsx
-- [ ] T075 [P] [US1] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation) - **Moved to Phase 6 (US2)**
-- [ ] T076 [US1] Implement dynamic question rendering (text, radio, checkbox, scale) - **Moved to Phase 6 (US2)**
-- [ ] T077 [US1] Integrate React Hook Form with Zod validation in SurveyForm - **Moved to Phase 6 (US2)**
+- [X] T075 [P] [US1] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation) - **Completed in Phase 6 (US2)**
+- [X] T076 [US1] Implement dynamic question rendering (text, radio, checkbox, scale) - **Completed in Phase 6 (US2)**
+- [X] T077 [US1] Integrate React Hook Form with Zod validation in SurveyForm - **Completed in Phase 6 (US2)**
 - [X] T078 [US1] Implement GPS capture on survey load (browser Geolocation API)
 - [X] T079 [US1] Add GPS permission handling and error states
-- [ ] T080 [US1] Display captured GPS coordinates to enumerator (readonly field) - **Moved to Phase 6 (US2)**
+- [X] T080 [US1] Display captured GPS coordinates to enumerator (readonly field) - **Completed in Phase 6 (US2)**
 
 ### Response Submission
 
 - [X] T081 [P] [US1] Create response service in src/lib/services/responseService.ts (submitResponse, saveDraft)
 - [X] T082 [US1] Implement response creation with answers (transaction-like pattern)
 - [X] T083 [US1] Implement retry mechanism with exponential backoff (initial delay: 2s, multiplier: 2x, max attempts: 3)
-- [ ] T084 [US1] Add retry countdown timer UI - **Moved to Phase 6 (US2)**
-- [ ] T085 [US1] Create submission confirmation UI with success message - **Moved to Phase 6 (US2)**
+- [X] T084 [US1] Add retry countdown timer UI - **Completed in Phase 6 (US2)**
+- [X] T085 [US1] Create submission confirmation UI with success message - **Completed in Phase 6 (US2)**
 - [X] T086 [US1] Implement draft save functionality (status=draft)
 - [X] T087 [US1] Add validation to prevent submission with empty required fields
 
-**Checkpoint**: Phase 5 foundation complete (28/34 tasks) - Services, hooks, UI structure, GPS utilities, and response retry logic implemented. Dynamic survey form rendering (T075-T077, T080, T084-T085) moved to Phase 6 for full integration with US2 multi-survey workflow.
+**Checkpoint**: Phase 5 complete (34/34 tasks) ✅ - All services, hooks, UI structure, GPS utilities, and response retry logic implemented. Dynamic survey form rendering (T075-T077, T080, T084-T085) completed in Phase 6 for full integration with US2 multi-survey workflow.
 
 ---
 
