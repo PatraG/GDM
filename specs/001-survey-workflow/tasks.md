@@ -45,44 +45,44 @@
 
 ### Appwrite Configuration
 
-- [ ] T009 Create Appwrite client initialization in src/lib/appwrite/client.ts
-- [ ] T010 Create Appwrite constants file in src/lib/appwrite/constants.ts (database ID, collection IDs)
-- [ ] T011 Create environment variable validation in src/lib/appwrite/config.ts
+- [X] T009 Create Appwrite client initialization in src/lib/appwrite/client.ts
+- [X] T010 Create Appwrite constants file in src/lib/appwrite/constants.ts (database ID, collection IDs)
+- [X] T011 Create environment variable validation in src/lib/appwrite/config.ts
 
 ### Type Definitions
 
-- [ ] T012 [P] Create auth types in src/lib/types/auth.ts (User, Role, AuthSession)
-- [ ] T013 [P] Create respondent types in src/lib/types/respondent.ts (Respondent, RespondentCreate, RespondentUpdate)
-- [ ] T014 [P] Create session types in src/lib/types/session.ts (Session, SessionCreate, SessionStatus)
-- [ ] T015 [P] Create survey types in src/lib/types/survey.ts (Survey, Question, Option, QuestionType)
-- [ ] T016 [P] Create response types in src/lib/types/response.ts (Response, Answer, ResponseStatus)
+- [X] T012 [P] Create auth types in src/lib/types/auth.ts (User, Role, AuthSession)
+- [X] T013 [P] Create respondent types in src/lib/types/respondent.ts (Respondent, RespondentCreate, RespondentUpdate)
+- [X] T014 [P] Create session types in src/lib/types/session.ts (Session, SessionCreate, SessionStatus)
+- [X] T015 [P] Create survey types in src/lib/types/survey.ts (Survey, Question, Option, QuestionType)
+- [X] T016 [P] Create response types in src/lib/types/response.ts (Response, Answer, ResponseStatus)
 
-### Appwrite Collections Setup (Manual via Console - Document Steps)
+### Appwrite Collections Setup (Automated via setup-appwrite.ts script)
 
-- [ ] T017 Create `users` collection with schema: userId, role, status, createdAt, updatedAt
-- [ ] T018 Create `respondents` collection with schema: respondentId, pseudonym, ageRange, sex, adminArea, consentGiven, consentTimestamp, enumeratorId, createdAt
-- [ ] T019 Create `sessions` collection with schema: sessionId, enumeratorId, startTime, endTime, status, createdAt, updatedAt
-- [ ] T020 Create `surveys` collection with schema: surveyId, title, description, version, status, createdAt, updatedAt
+- [X] T017 Create `users` collection with schema: userId, role, status, createdAt, updatedAt
+- [X] T018 Create `respondents` collection with schema: respondentId, pseudonym, ageRange, sex, adminArea, consentGiven, consentTimestamp, enumeratorId, createdAt
+- [X] T019 Create `sessions` collection with schema: sessionId, enumeratorId, startTime, endTime, status, createdAt, updatedAt
+- [X] T020 Create `surveys` collection with schema: surveyId, title, description, version, status, createdAt, updatedAt
 - [ ] T020a Implement survey version locking logic (status: draft/locked/archived; block edits when status=locked)
-- [ ] T021 Create `questions` collection with schema: questionId, surveyId, questionText, questionType, required, order, createdAt
-- [ ] T022 Create `options` collection with schema: optionId, questionId, optionText, value, order
-- [ ] T023 Create `responses` collection with schema: responseId, sessionId, respondentId, surveyId, surveyVersion, location, status, submittedAt, voidedBy, voidReason, createdAt, updatedAt
-- [ ] T024 Create `answers` collection with schema: answerId, responseId, questionId, answerValue, createdAt
-- [ ] T025 Set Appwrite permissions for all collections per plan.md (role:enumerator, role:admin)
-- [ ] T026 Create indexes: respondents.pseudonym (unique), sessions.enumeratorId, responses.sessionId, responses.submittedAt
+- [X] T021 Create `questions` collection with schema: questionId, surveyId, questionText, questionType, required, order, createdAt
+- [X] T022 Create `options` collection with schema: optionId, questionId, optionText, value, order
+- [X] T023 Create `responses` collection with schema: responseId, sessionId, respondentId, surveyId, surveyVersion, location, status, submittedAt, voidedBy, voidReason, createdAt, updatedAt
+- [X] T024 Create `answers` collection with schema: answerId, responseId, questionId, answerValue, createdAt
+- [X] T025 Set Appwrite permissions for all collections per plan.md (role:enumerator, role:admin)
+- [X] T026 Create indexes: respondents.pseudonym (unique), sessions.enumeratorId, responses.sessionId, responses.submittedAt
 
 ### Validation & Utilities
 
-- [ ] T027 [P] Create Zod validation schemas in src/lib/utils/validation.ts (respondent, session, survey, response)
-- [ ] T028 [P] Create formatters in src/lib/utils/formatters.ts (date, GPS coordinates, respondent code display)
-- [ ] T029 Create respondent code generator in src/lib/utils/respondentCode.ts (R-00001 format)
+- [X] T027 [P] Create Zod validation schemas in src/lib/utils/validation.ts (respondent, session, survey, response)
+- [X] T028 [P] Create formatters in src/lib/utils/formatters.ts (date, GPS coordinates, respondent code display)
+- [X] T029 Create respondent code generator in src/lib/utils/respondentCode.ts (R-00001 format)
 
 ### Base Layout & Shared Components
 
-- [ ] T030 Create root layout in src/app/layout.tsx with Tailwind imports
-- [ ] T031 [P] Create shared Header component in src/components/shared/Header.tsx
-- [ ] T032 [P] Create ErrorBoundary component in src/components/shared/ErrorBoundary.tsx
-- [ ] T033 [P] Create LoadingSpinner component in src/components/shared/LoadingSpinner.tsx
+- [X] T030 Create root layout in src/app/layout.tsx with Tailwind imports
+- [X] T031 [P] Create shared Header component in src/components/shared/Header.tsx
+- [X] T032 [P] Create ErrorBoundary component in src/components/shared/ErrorBoundary.tsx
+- [X] T033 [P] Create LoadingSpinner component in src/components/shared/LoadingSpinner.tsx
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
