@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userCreateSchema } from '@/lib/utils/validation';
 import { InlineSpinner } from '@/components/shared/LoadingSpinner';
+import { PasswordStrengthIndicator } from '@/components/shared/PasswordStrengthIndicator';
 import type { UserCreate } from '@/lib/types/auth';
 
 interface EnumeratorFormProps {
@@ -42,6 +43,7 @@ export function EnumeratorForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<UserCreate>({
     resolver: zodResolver(userCreateSchema),
@@ -53,6 +55,7 @@ export function EnumeratorForm({
   });
 
   const isFormLoading = isLoading || isSubmitting;
+  const passwordValue = watch('password') || '';
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -93,6 +96,14 @@ export function EnumeratorForm({
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="••••••••"
           />
+          
+          {/* Password Strength Indicator */}
+          <PasswordStrengthIndicator 
+            password={passwordValue} 
+            minStrength="medium"
+            showDetails={true}
+          />
+          
           {errors.password && (
             <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>
           )}
