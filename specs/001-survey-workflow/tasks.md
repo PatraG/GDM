@@ -119,17 +119,17 @@
 
 ### Implementation for User Story 4
 
-- [ ] T044 [US4] Create admin layout in src/app/(dashboard)/admin/layout.tsx with role gate
-- [ ] T045 [US4] Create enumerators management page in src/app/(dashboard)/admin/enumerators/page.tsx
-- [ ] T046 [P] [US4] Create EnumeratorList component in src/components/admin/EnumeratorList.tsx
-- [ ] T047 [P] [US4] Create EnumeratorForm component in src/components/admin/EnumeratorForm.tsx (create/edit)
-- [ ] T048 [US4] Create user service in src/lib/services/userService.ts (createEnumerator, listEnumerators, updateStatus)
-- [ ] T049 [US4] Create Appwrite database helpers in src/lib/appwrite/databases.ts (CRUD wrappers)
-- [ ] T050 [US4] Implement enumerator creation flow (Appwrite Auth + users collection)
-- [ ] T051 [US4] Implement activation/deactivation with session warning modal
-- [ ] T051a [US4] Add validation to block authentication attempts by suspended enumerators
-- [ ] T052 [US4] Create enumerator detail view in src/app/(dashboard)/admin/enumerators/[id]/page.tsx
-- [ ] T053 [US4] Add suspension warning logic (check for open sessions before deactivation)
+- [X] T044 [US4] Create admin layout in src/app/(dashboard)/admin/layout.tsx with role gate
+- [X] T045 [US4] Create enumerators management page in src/app/(dashboard)/admin/enumerators/page.tsx
+- [X] T046 [P] [US4] Create EnumeratorList component in src/components/admin/EnumeratorList.tsx
+- [X] T047 [P] [US4] Create EnumeratorForm component in src/components/admin/EnumeratorForm.tsx (create/edit)
+- [X] T048 [US4] Create user service in src/lib/services/userService.ts (createEnumerator, listEnumerators, updateStatus)
+- [X] T049 [US4] Create Appwrite database helpers in src/lib/appwrite/databases.ts (CRUD wrappers)
+- [X] T050 [US4] Implement enumerator creation flow (Appwrite Auth + users collection)
+- [X] T051 [US4] Implement activation/deactivation with session warning modal
+- [X] T051a [US4] Add validation to block authentication attempts by suspended enumerators
+- [X] T052 [US4] Create enumerator detail view in src/app/(dashboard)/admin/enumerators/[id]/page.tsx
+- [X] T053 [US4] Add suspension warning logic (check for open sessions before deactivation)
 
 **Checkpoint**: At this point, User Story 4 should be fully functional - admins can manage enumerators, and role-based access control is enforced.
 
