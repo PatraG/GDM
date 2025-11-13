@@ -63,6 +63,7 @@
 - [ ] T018 Create `respondents` collection with schema: respondentId, pseudonym, ageRange, sex, adminArea, consentGiven, consentTimestamp, enumeratorId, createdAt
 - [ ] T019 Create `sessions` collection with schema: sessionId, enumeratorId, startTime, endTime, status, createdAt, updatedAt
 - [ ] T020 Create `surveys` collection with schema: surveyId, title, description, version, status, createdAt, updatedAt
+- [ ] T020a Implement survey version locking logic (status: draft/locked/archived; block edits when status=locked)
 - [ ] T021 Create `questions` collection with schema: questionId, surveyId, questionText, questionType, required, order, createdAt
 - [ ] T022 Create `options` collection with schema: optionId, questionId, optionText, value, order
 - [ ] T023 Create `responses` collection with schema: responseId, sessionId, respondentId, surveyId, surveyVersion, location, status, submittedAt, voidedBy, voidReason, createdAt, updatedAt
@@ -150,6 +151,7 @@
 - [ ] T056 [P] [US1] Create respondent service in src/lib/services/respondentService.ts (create, list, search)
 - [ ] T057 [US1] Create respondents page in src/app/(dashboard)/enumerator/respondents/page.tsx
 - [ ] T058 [P] [US1] Create RespondentForm component in src/components/enumerator/RespondentForm.tsx
+- [ ] T058a [US1] Add validation to block name-like patterns in respondent form fields (detect capitalized words, common name patterns)
 - [ ] T059 [P] [US1] Create RespondentSearch component in src/components/enumerator/RespondentSearch.tsx
 - [ ] T060 [US1] Implement respondent code generator integration (call from RespondentForm)
 - [ ] T061 [US1] Add consent validation (checkbox must be checked before saving)
@@ -184,7 +186,7 @@
 
 - [ ] T081 [P] [US1] Create response service in src/lib/services/responseService.ts (submitResponse, saveDraft)
 - [ ] T082 [US1] Implement response creation with answers (transaction-like pattern)
-- [ ] T083 [US1] Implement retry mechanism with exponential backoff
+- [ ] T083 [US1] Implement retry mechanism with exponential backoff (initial delay: 2s, multiplier: 2x, max attempts: 3)
 - [ ] T084 [US1] Add retry countdown timer UI
 - [ ] T085 [US1] Create submission confirmation UI with success message
 - [ ] T086 [US1] Implement draft save functionality (status=draft)
@@ -511,20 +513,20 @@ With multiple developers:
 
 ## Task Summary
 
-**Total Tasks**: 161 tasks (updated with fixes)
+**Total Tasks**: 163 tasks (updated with analysis fixes)
 
 **Breakdown by Phase**:
 - Phase 1 (Setup): 8 tasks
-- Phase 2 (Foundational): 25 tasks
+- Phase 2 (Foundational): 26 tasks (added T020a)
 - Phase 3 (US6 - Auth): 10 tasks
-- Phase 4 (US4 - Admin): 11 tasks (added T051a)
-- Phase 5 (US1 - Core Survey): 35 tasks (added T069a)
+- Phase 4 (US4 - Admin): 11 tasks (includes T051a)
+- Phase 5 (US1 - Core Survey): 36 tasks (includes T058a, T069a)
 - Phase 6 (US2 - Multi-Survey): 9 tasks
 - Phase 7 (US3 - Search): 8 tasks
 - Phase 8 (US5 - Admin Dashboard): 17 tasks
-- Phase 9 (Polish): 38 tasks (added T135a-d)
+- Phase 9 (Polish): 38 tasks (includes T135a-d)
 
-**MVP Tasks**: 89 tasks (Phases 1-5, updated)
+**MVP Tasks**: 91 tasks (Phases 1-5, updated)
 
 **Parallel Opportunities**: 45+ tasks can run in parallel (marked with [P])
 

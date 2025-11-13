@@ -258,7 +258,7 @@ Enumerators must authenticate with email and password to access the system, ensu
 - **FR-033a**: System MUST capture GPS coordinates at survey submission if device supports geolocation; location stored per response for spatial analysis
 - **FR-034**: System MUST set response status to "submitted" upon successful save
 - **FR-035**: System MUST display confirmation message after successful submission
-- **FR-036**: System MUST handle submission errors gracefully with manual retry option and exponential backoff guidance (e.g., countdown timer showing recommended wait time before retry)
+- **FR-036**: System MUST handle submission errors gracefully with manual retry option and exponential backoff guidance (initial delay: 2 seconds, multiplier: 2x, maximum attempts: 3; countdown timer showing recommended wait time before retry)
 - **FR-037**: Enumerators MUST be able to fill multiple surveys for the same respondent in the same session
 - **FR-038**: System MUST allow enumerators to return to survey selection after submitting one survey within the same session
 
@@ -303,7 +303,7 @@ Enumerators must authenticate with email and password to access the system, ensu
 - Relationships: Belongs to one survey; has many options (if choice-based); referenced by many answers
 
 **Option**:
-- Represents: Possible answer choice for multiple-choice or single-choice questions
+- Represents: Possible answer choice for multiple-choice or single-choice questions; for scale questions (Likert), options represent numeric values (1-5); for choice questions, options are text responses
 - Key attributes: optionId, questionId, optionText, value (numeric or text), order
 - Relationships: Belongs to one question; selected in many answers
 
