@@ -5,7 +5,7 @@
  * Usage: npm run setup:appwrite
  */
 
-import { Client, Databases, ID, Permission, Role } from 'node-appwrite';
+import { Client, Databases, ID, Permission, Role, IndexType } from 'node-appwrite';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
@@ -122,7 +122,7 @@ async function createRespondentsCollection() {
         await databases.createDatetimeAttribute(DATABASE_ID, collectionId, 'createdAt', true);
 
         // Create unique index for pseudonym
-        await databases.createIndex(DATABASE_ID, collectionId, 'pseudonym_unique', 'unique', ['pseudonym']);
+        await databases.createIndex(DATABASE_ID, collectionId, 'pseudonym_unique', IndexType.Unique, ['pseudonym']);
 
         console.log('✅ Respondents collection created\n');
     } catch (error: any) {
@@ -160,7 +160,7 @@ async function createSessionsCollection() {
         await databases.createDatetimeAttribute(DATABASE_ID, collectionId, 'updatedAt', true);
 
         // Create index for enumeratorId
-        await databases.createIndex(DATABASE_ID, collectionId, 'enumeratorId_index', 'key', ['enumeratorId']);
+        await databases.createIndex(DATABASE_ID, collectionId, 'enumeratorId_index', IndexType.Key, ['enumeratorId']);
 
         console.log('✅ Sessions collection created\n');
     } catch (error: any) {
@@ -303,8 +303,8 @@ async function createResponsesCollection() {
         await databases.createDatetimeAttribute(DATABASE_ID, collectionId, 'updatedAt', true);
 
         // Create indexes
-        await databases.createIndex(DATABASE_ID, collectionId, 'sessionId_index', 'key', ['sessionId']);
-        await databases.createIndex(DATABASE_ID, collectionId, 'submittedAt_index', 'key', ['submittedAt']);
+        await databases.createIndex(DATABASE_ID, collectionId, 'sessionId_index', IndexType.Key, ['sessionId']);
+        await databases.createIndex(DATABASE_ID, collectionId, 'submittedAt_index', IndexType.Key, ['submittedAt']);
 
         console.log('✅ Responses collection created\n');
     } catch (error: any) {

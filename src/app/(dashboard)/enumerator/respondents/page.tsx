@@ -126,7 +126,7 @@ export default function RespondentsPage() {
               Register New Respondent
             </h2>
             <p className="mb-6 text-sm text-gray-600">
-              Fill in the respondent's demographic information. All data is anonymized
+              Fill in the respondent&apos;s demographic information. All data is anonymized
               with a unique code.
             </p>
             <RespondentForm

@@ -16,10 +16,11 @@ import {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const enumerator = await getEnumerator(params.id);
+    const enumerator = await getEnumerator(id);
     return NextResponse.json(enumerator);
   } catch (error) {
     console.error('Get enumerator API error:', error);
@@ -32,14 +33,15 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const body = await request.json();
     
     // Check for active sessions before suspension
     if (body.status === 'suspended') {
-      const hasActive = await hasActiveSessions(params.id);
+      const hasActive = await hasActiveSessions(id);
       if (hasActive) {
         return NextResponse.json(
           {
@@ -51,7 +53,7 @@ export async function PATCH(
       }
     }
     
-    const updated = await updateEnumeratorStatus(params.id, body.status);
+    const updated = await updateEnumeratorStatus(id, body.status);
     return NextResponse.json(updated);
   } catch (error) {
     console.error('Update enumerator API error:', error);

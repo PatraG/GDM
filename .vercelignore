@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+tests
+
+# Development
+.env.local
+.env.development.local
+.env.test.local
+
+# IDE
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Documentation (optional - include if you want docs deployed)
+# docs/
+
+# Other
+*.log
+.DS_Store

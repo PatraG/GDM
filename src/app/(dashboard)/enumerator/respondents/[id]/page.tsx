@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { Respondent } from '@/lib/types/respondent';
@@ -23,9 +23,9 @@ import { formatDateTime, formatAgeRange, formatSex, formatSessionStatus } from '
 import { Query } from 'appwrite';
 
 interface RespondentDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 interface SessionWithResponses extends Session {
@@ -33,6 +33,7 @@ interface SessionWithResponses extends Session {
 }
 
 export default function RespondentDetailPage({ params }: RespondentDetailPageProps) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const { user } = useAuth();
   const [respondent, setRespondent] = useState<Respondent | null>(null);
@@ -47,12 +48,12 @@ export default function RespondentDetailPage({ params }: RespondentDetailPagePro
         setError(null);
 
         // Load respondent
-        const respondentData = await getRespondent(params.id);
+        const respondentData = await getRespondent(resolvedParams.id);
         setRespondent(respondentData);
 
         // Load sessions for this respondent
         const sessionsResult = await listDocuments(COLLECTIONS.SESSIONS, [
-          Query.equal('respondentId', params.id),
+          Query.equal('respondentId', resolvedParams.id),
           Query.orderDesc('startTime'),
           Query.limit(100),
         ]);
@@ -101,7 +102,7 @@ export default function RespondentDetailPage({ params }: RespondentDetailPagePro
     }
 
     loadRespondentData();
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   if (isLoading) {
     return (

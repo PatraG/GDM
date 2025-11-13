@@ -12,6 +12,7 @@
 
 import { useEffect } from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -72,12 +73,12 @@ export default function Error({ error, reset }: ErrorProps) {
               <RefreshCw className="h-4 w-4" />
               Try Again
             </button>
-            <a
+            <Link
               href="/"
               className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               Go Home
-            </a>
+            </Link>
           </div>
 
           {/* Support Link */}

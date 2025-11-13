@@ -9,8 +9,9 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { PageLoading } from '@/components/shared/LoadingSpinner';
 import { formatDate, formatUserRole } from '@/lib/utils/formatters';
 import type { User } from '@/lib/types/auth';
@@ -18,8 +19,9 @@ import type { User } from '@/lib/types/auth';
 export default function EnumeratorDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const [enumerator, setEnumerator] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,7 @@ export default function EnumeratorDetailPage({
       setIsLoading(true);
       setError(null);
       
-      const response = await fetch(`/api/enumerators/${params.id}`);
+      const response = await fetch(`/api/enumerators/${resolvedParams.id}`);
       
       if (!response.ok) {
         throw new Error('Failed to load enumerator');
@@ -64,7 +66,7 @@ export default function EnumeratorDetailPage({
     try {
       setIsToggling(true);
       
-      const response = await fetch(`/api/enumerators/${params.id}`, {
+      const response = await fetch(`/api/enumerators/${resolvedParams.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -74,18 +76,24 @@ export default function EnumeratorDetailPage({
         const errorData = await response.json();
         
         if (errorData.hasActiveSessions) {
-          alert('Cannot suspend enumerator with active sessions. Please ask them to close their sessions first.');
+          toast.error('Cannot suspend enumerator', {
+            description: 'Enumerator has active sessions. Please ask them to close their sessions first.',
+          });
           return;
         }
         
         throw new Error(errorData.error || 'Failed to update status');
       }
       
+      toast.success('Status updated successfully');
+      
       // Reload
       await loadEnumerator();
     } catch (err) {
       console.error('Toggle status error:', err);
-      alert(err instanceof Error ? err.message : 'Failed to update status');
+      toast.error('Failed to update status', {
+        description: err instanceof Error ? err.message : 'Please try again',
+      });
     } finally {
       setIsToggling(false);
     }
@@ -94,7 +102,7 @@ export default function EnumeratorDetailPage({
   // Load on mount
   useEffect(() => {
     loadEnumerator();
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   if (isLoading) {
     return <PageLoading text="Loading enumerator details..." />;
