@@ -24,18 +24,27 @@ export async function login(credentials: LoginCredentials): Promise<AuthSession>
   try {
     const account = getAccount();
     
-    // Delete any existing session first to prevent "session already exists" error
-    try {
-      await account.deleteSession('current');
-    } catch (err) {
-      // Ignore error if no session exists
-    }
+    // Try to create session directly
+    // If there's already a session, Appwrite will throw an error
+    let session: Models.Session;
     
-    // Create email session
-    const session = await account.createEmailPasswordSession(
-      credentials.email,
-      credentials.password
-    );
+    try {
+      session = await account.createEmailPasswordSession(
+        credentials.email,
+        credentials.password
+      );
+    } catch (sessionError: any) {
+      // If error is "session already active", delete it and retry
+      if (sessionError.code === 401 && sessionError.message?.includes('session')) {
+        await account.deleteSession('current');
+        session = await account.createEmailPasswordSession(
+          credentials.email,
+          credentials.password
+        );
+      } else {
+        throw sessionError;
+      }
+    }
     
     // Get user data with role
     const user = await getUser();
