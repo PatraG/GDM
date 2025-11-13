@@ -9,6 +9,7 @@
     "lint": "next lint",
     "prepare": "husky",
     "setup:appwrite": "tsx scripts/setup-appwrite.ts",
+    "seed:users": "node scripts/seed-users.js",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",

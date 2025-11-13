@@ -24,6 +24,13 @@ export async function login(credentials: LoginCredentials): Promise<AuthSession>
   try {
     const account = getAccount();
     
+    // Delete any existing session first to prevent "session already exists" error
+    try {
+      await account.deleteSession('current');
+    } catch (err) {
+      // Ignore error if no session exists
+    }
+    
     // Create email session
     const session = await account.createEmailPasswordSession(
       credentials.email,
