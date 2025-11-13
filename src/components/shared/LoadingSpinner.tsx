@@ -9,6 +9,7 @@
 
 'use client';
 
+import { memo } from 'react';
 import { cn } from '@/lib/utils';
 
 interface LoadingSpinnerProps {
@@ -28,7 +29,7 @@ interface LoadingSpinnerProps {
   fullScreen?: boolean;
 }
 
-export function LoadingSpinner({
+export const LoadingSpinner = memo(function LoadingSpinner({
   size = 'md',
   text,
   className,
@@ -70,12 +71,12 @@ export function LoadingSpinner({
   );
 
   return content;
-}
+});
 
 /**
  * Inline loading spinner for buttons and small spaces
  */
-export function InlineSpinner({ className }: { className?: string }) {
+export const InlineSpinner = memo(function InlineSpinner({ className }: { className?: string }) {
   return (
     <div
       className={cn(
@@ -86,7 +87,7 @@ export function InlineSpinner({ className }: { className?: string }) {
       aria-label="Loading"
     />
   );
-}
+});
 
 /**
  * Loading skeleton for content placeholders
@@ -99,7 +100,7 @@ interface SkeletonProps {
   lines?: number;
 }
 
-export function Skeleton({ className, lines = 1 }: SkeletonProps) {
+export const Skeleton = memo(function Skeleton({ className, lines = 1 }: SkeletonProps) {
   if (lines === 1) {
     return (
       <div
@@ -125,24 +126,24 @@ export function Skeleton({ className, lines = 1 }: SkeletonProps) {
       ))}
     </div>
   );
-}
+});
 
 /**
  * Loading card skeleton
  */
-export function CardSkeleton() {
+export const CardSkeleton = memo(function CardSkeleton() {
   return (
     <div className="rounded-lg border bg-card p-6">
       <Skeleton className="mb-4 h-6 w-2/3" />
       <Skeleton lines={3} />
     </div>
   );
-}
+});
 
 /**
  * Table skeleton
  */
-export function TableSkeleton({ rows = 5 }: { rows?: number }) {
+export const TableSkeleton = memo(function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="space-y-2">
       {/* Header */}
@@ -164,22 +165,22 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
       ))}
     </div>
   );
-}
+});
 
 /**
  * Page loading state
  */
-export function PageLoading({ text = 'Loading...' }: { text?: string }) {
+export const PageLoading = memo(function PageLoading({ text = 'Loading...' }: { text?: string }) {
   return (
     <div className="flex min-h-[400px] items-center justify-center">
       <LoadingSpinner size="lg" text={text} />
     </div>
   );
-}
+});
 
 /**
  * Full screen loading overlay
  */
-export function FullScreenLoading({ text = 'Loading...' }: { text?: string }) {
+export const FullScreenLoading = memo(function FullScreenLoading({ text = 'Loading...' }: { text?: string }) {
   return <LoadingSpinner size="xl" text={text} fullScreen />;
-}
+});

@@ -11,6 +11,7 @@
 
 'use client';
 
+import { memo } from 'react';
 import type { Session } from '@/lib/types/session';
 import { formatSessionStatus, formatDuration, formatRelativeTime } from '@/lib/utils/formatters';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
@@ -24,7 +25,7 @@ interface SessionCardProps {
   isClosing?: boolean;
 }
 
-export function SessionCard({
+export const SessionCard = memo(function SessionCard({
   session,
   respondentPseudonym,
   timeRemaining,
@@ -199,4 +200,4 @@ export function SessionCard({
       )}
     </div>
   );
-}
+});

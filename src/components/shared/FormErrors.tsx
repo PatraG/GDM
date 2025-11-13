@@ -7,6 +7,7 @@
  * @module components/shared/FormErrors
  */
 
+import { memo } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -33,7 +34,7 @@ interface FieldErrorProps {
  * {errors.email && <FieldError message={errors.email.message} />}
  * ```
  */
-export function FieldError({ message, className = '' }: FieldErrorProps) {
+export const FieldError = memo(function FieldError({ message, className = '' }: FieldErrorProps) {
   if (!message) return null;
   
   return (
@@ -41,7 +42,7 @@ export function FieldError({ message, className = '' }: FieldErrorProps) {
       {message}
     </p>
   );
-}
+});
 
 interface FormErrorAlertProps {
   /**
@@ -71,7 +72,7 @@ interface FormErrorAlertProps {
  * {submitError && <FormErrorAlert message={submitError} />}
  * ```
  */
-export function FormErrorAlert({ 
+export const FormErrorAlert = memo(function FormErrorAlert({ 
   title = 'Error', 
   message, 
   className = '' 
@@ -91,7 +92,7 @@ export function FormErrorAlert({
       </AlertDescription>
     </Alert>
   );
-}
+});
 
 interface RequiredIndicatorProps {
   /**
@@ -113,7 +114,7 @@ interface RequiredIndicatorProps {
  * </Label>
  * ```
  */
-export function RequiredIndicator({ className = '' }: RequiredIndicatorProps) {
+export const RequiredIndicator = memo(function RequiredIndicator({ className = '' }: RequiredIndicatorProps) {
   return (
     <span 
       className={`text-destructive ${className}`} 
@@ -123,7 +124,7 @@ export function RequiredIndicator({ className = '' }: RequiredIndicatorProps) {
       *
     </span>
   );
-}
+});
 
 /**
  * Helper function to check if form has any errors
