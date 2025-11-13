@@ -26,14 +26,14 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Verify Next.js project structure matches plan.md in src/ directory
-- [ ] T002 [P] Install core dependencies: Appwrite SDK, React Hook Form, Zod, shadcn/ui components
-- [ ] T003 [P] Configure TypeScript strict mode in tsconfig.json
-- [ ] T004 [P] Configure ESLint and Prettier with pre-commit hooks
-- [ ] T005 [P] Install and configure Tailwind CSS with shadcn/ui in tailwind.config.ts
-- [ ] T006 Create Appwrite database `oral_health_survey` via Console (manual step - document in setup notes)
-- [ ] T007 Create shadcn/ui components directory structure in src/components/ui/
-- [ ] T008 Install initial shadcn/ui components: button, form, input, select, checkbox, card, table
+- [X] T001 Verify Next.js project structure matches plan.md in src/ directory
+- [X] T002 [P] Install core dependencies: Appwrite SDK, React Hook Form, Zod, shadcn/ui components
+- [X] T003 [P] Configure TypeScript strict mode in tsconfig.json
+- [X] T004 [P] Configure ESLint and Prettier with pre-commit hooks
+- [X] T005 [P] Install and configure Tailwind CSS with shadcn/ui in tailwind.config.ts
+- [X] T006 Create Appwrite database `oral_health_survey` via Console (manual step - document in setup notes)
+- [X] T007 Create shadcn/ui components directory structure in src/components/ui/
+- [X] T008 Install initial shadcn/ui components: button, form, input, select, checkbox, card, table
 
 ---
 
