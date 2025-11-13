@@ -7,11 +7,13 @@
  * - Create new session with respondent selection
  * - List session history
  * - Close session manually
+ * - T103: Support pre-selected respondent via query parameter
  */
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useSessions } from '@/lib/hooks/useSessions';
 import { SessionCard } from '@/components/enumerator/SessionCard';
@@ -25,6 +27,7 @@ type ViewMode = 'active' | 'create' | 'summary' | 'history';
 
 export default function SessionsPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const {
     activeSession,
     sessions,
@@ -49,6 +52,25 @@ export default function SessionsPage() {
 
   // Store respondent info for active session
   const [activeRespondent, setActiveRespondent] = useState<Respondent | null>(null);
+
+  // T103: Handle pre-selected respondent from query parameter
+  useEffect(() => {
+    const respondentId = searchParams.get('respondent');
+    if (respondentId && !activeSession) {
+      // Auto-navigate to create mode and load respondent
+      setViewMode('create');
+      
+      // Load and auto-create session for this respondent
+      getRespondent(respondentId)
+        .then((respondent) => {
+          handleCreateSession(respondent);
+        })
+        .catch((err) => {
+          console.error('Failed to load pre-selected respondent:', err);
+          setCreateError('Failed to load selected respondent');
+        });
+    }
+  }, [searchParams, activeSession]);
 
   // Load respondent info for active session
   const loadActiveRespondent = useCallback(async () => {
