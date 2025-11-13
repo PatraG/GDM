@@ -131,6 +131,12 @@ export const QUESTION_TYPES = {
 export const SESSION_TIMEOUT_MS = 2 * 60 * 60 * 1000;
 
 /**
+ * Session warning threshold in milliseconds
+ * 1 hour 45 minutes = 6,300,000 ms (15 minutes before timeout)
+ */
+export const SESSION_WARNING_MS = (1 * 60 * 60 + 45 * 60) * 1000;
+
+/**
  * Retry configuration for network operations
  * Based on FR-036: exponential backoff with initial delay 2s, multiplier 2x, max 3 attempts
  */

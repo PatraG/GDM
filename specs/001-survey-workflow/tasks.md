@@ -96,16 +96,16 @@
 
 ### Implementation for User Story 6
 
-- [ ] T034 [P] [US6] Create Appwrite auth helpers in src/lib/appwrite/auth.ts (login, logout, getSession, getUser)
-- [ ] T035 [P] [US6] Create useAuth hook in src/lib/hooks/useAuth.ts (authentication state, role detection)
-- [ ] T036 [US6] Create auth layout group in src/app/(auth)/layout.tsx
-- [ ] T037 [US6] Create login page in src/app/(auth)/login/page.tsx
-- [ ] T038 [P] [US6] Create LoginForm component in src/components/auth/LoginForm.tsx
-- [ ] T039 [US6] Create Next.js middleware in src/middleware.ts (route protection, role-based redirects)
-- [ ] T040 [P] [US6] Create ProtectedRoute component in src/components/auth/ProtectedRoute.tsx
-- [ ] T041 [US6] Create authenticated dashboard layout group in src/app/(dashboard)/layout.tsx
-- [ ] T042 [US6] Add logout functionality to Header component
-- [ ] T043 [US6] Implement session timeout detection (2-hour inactivity) in useAuth hook
+- [X] T034 [P] [US6] Create Appwrite auth helpers in src/lib/appwrite/auth.ts (login, logout, getSession, getUser)
+- [X] T035 [P] [US6] Create useAuth hook in src/lib/hooks/useAuth.ts (authentication state, role detection)
+- [X] T036 [US6] Create auth layout group in src/app/(auth)/layout.tsx
+- [X] T037 [US6] Create login page in src/app/(auth)/login/page.tsx
+- [X] T038 [P] [US6] Create LoginForm component in src/components/auth/LoginForm.tsx
+- [X] T039 [US6] Create Next.js middleware in src/middleware.ts (route protection, role-based redirects)
+- [X] T040 [P] [US6] Create ProtectedRoute component in src/components/auth/ProtectedRoute.tsx
+- [X] T041 [US6] Create authenticated dashboard layout group in src/app/(dashboard)/layout.tsx
+- [X] T042 [US6] Add logout functionality to Header component
+- [X] T043 [US6] Implement session timeout detection (2-hour inactivity) in useAuth hook
 
 **Checkpoint**: At this point, User Story 6 should be fully functional - users can log in, stay authenticated, and log out securely.
 
