@@ -8,13 +8,14 @@
  * - GPS coordinate capture and display
  * - Response submission with retry mechanism and countdown timer
  * - Success confirmation with multi-survey workflow support
+ * - Lazy loading for surveys with many questions (T129)
  * 
- * T075-T077, T080, T084-T085
+ * T075-T077, T080, T084-T085, T129
  */
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,6 +27,9 @@ import { submitResponse } from '@/lib/services/responseService';
 import { RETRY_CONFIG } from '@/lib/appwrite/constants';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { FieldError, FormErrorAlert, RequiredIndicator } from '@/components/shared/FormErrors';
+
+// Question chunk size for lazy loading
+const QUESTIONS_PER_CHUNK = 10;
 
 interface SurveyFormProps {
   survey: SurveyWithQuestions;
@@ -54,6 +58,20 @@ export function SurveyForm({
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [retryCountdown, setRetryCountdown] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Lazy loading state
+  const [visibleQuestionCount, setVisibleQuestionCount] = useState(
+    Math.min(QUESTIONS_PER_CHUNK, survey.questions.length)
+  );
+
+  // Memoize visible questions to prevent re-renders
+  const visibleQuestions = useMemo(
+    () => survey.questions.slice(0, visibleQuestionCount),
+    [survey.questions, visibleQuestionCount]
+  );
+
+  const totalQuestions = survey.questions.length;
+  const hasMoreQuestions = visibleQuestionCount < totalQuestions;
 
   // Build dynamic Zod schema based on required questions
   const buildValidationSchema = () => {
@@ -306,7 +324,7 @@ export function SurveyForm({
       </div>
 
       {/* Questions */}
-      {survey.questions
+      {visibleQuestions
         .sort((a, b) => a.order - b.order)
         .map((question) => (
           <QuestionField
@@ -317,6 +335,45 @@ export function SurveyForm({
             error={errors[question.$id]}
           />
         ))}
+
+      {/* Load More Questions Button */}
+      {hasMoreQuestions && (
+        <div className="flex flex-col items-center gap-3 border-t border-gray-200 pt-6 sm:flex-row sm:justify-center">
+          <button
+            type="button"
+            onClick={() => setVisibleQuestionCount((prev) => Math.min(prev + QUESTIONS_PER_CHUNK, totalQuestions))}
+            disabled={isSubmitting}
+            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <svg
+              className="mr-2 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+            Load Next {Math.min(QUESTIONS_PER_CHUNK, totalQuestions - visibleQuestionCount)} Questions
+            <span className="ml-2 text-xs text-gray-500">
+              ({visibleQuestionCount} of {totalQuestions} loaded)
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setVisibleQuestionCount(totalQuestions)}
+            disabled={isSubmitting}
+            className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Show All Questions ({totalQuestions})
+          </button>
+        </div>
+      )}
 
       {/* Retry Status */}
       {isSubmitting && retryAttempt > 0 && (
