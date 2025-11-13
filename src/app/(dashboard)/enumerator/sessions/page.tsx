@@ -15,12 +15,13 @@ import { useState, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useSessions } from '@/lib/hooks/useSessions';
 import { SessionCard } from '@/components/enumerator/SessionCard';
+import { SessionSummary } from '@/components/enumerator/SessionSummary';
 import { RespondentSearch } from '@/components/enumerator/RespondentSearch';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import type { Respondent } from '@/lib/types/respondent';
 import { getRespondent } from '@/lib/services/respondentService';
 
-type ViewMode = 'active' | 'create' | 'history';
+type ViewMode = 'active' | 'create' | 'summary' | 'history';
 
 export default function SessionsPage() {
   const { user } = useAuth();
@@ -239,6 +240,30 @@ export default function SessionsPage() {
             </svg>
             History
           </button>
+          <button
+            onClick={() => setViewMode('summary')}
+            disabled={!activeSession}
+            className={`whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium ${
+              viewMode === 'summary'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50'
+            }`}
+          >
+            <svg
+              className="mr-2 inline-block h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Summary
+          </button>
         </nav>
       </div>
 
@@ -421,6 +446,37 @@ export default function SessionsPage() {
                 {sessions.map((session) => (
                   <SessionCard key={session.$id} session={session} />
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Summary View - T096 */}
+        {viewMode === 'summary' && (
+          <div>
+            {activeSession ? (
+              <SessionSummary session={activeSession} />
+            ) : (
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-12 text-center">
+                <svg
+                  className="mx-auto h-16 w-16 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                  No Active Session
+                </h3>
+                <p className="mt-2 text-sm text-gray-600">
+                  Start a session to view its summary
+                </p>
               </div>
             )}
           </div>

@@ -1,10 +1,8 @@
 /**
  * Surveys Page
  * Browse and fill surveys during an active session
- *
- * Note: Full SurveyForm implementation with dynamic rendering, GPS capture,
- * and retry submission will be completed in Phase 6. This provides
- * the foundation and structure for Phase 5 completion.
+ * 
+ * T089: Post-submission flow - return to SurveySelector without closing session
  */
 
 'use client';
@@ -14,9 +12,11 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useSessions } from '@/lib/hooks/useSessions';
 import { useSurveys } from '@/lib/hooks/useSurveys';
 import { SurveySelector } from '@/components/enumerator/SurveySelector';
+import { SurveyForm } from '@/components/enumerator/SurveyForm';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import type { Survey } from '@/lib/types/survey';
+import type { Survey, SurveyWithQuestions } from '@/lib/types/survey';
 import { getSessionResponses } from '@/lib/services/responseService';
+import { getSurveyWithQuestions } from '@/lib/services/surveyService';
 
 export default function SurveysPage() {
   const { user } = useAuth();
@@ -25,9 +25,10 @@ export default function SurveysPage() {
   });
   const { surveys, isLoading: surveysLoading } = useSurveys({ autoLoad: true });
 
-  const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<SurveyWithQuestions | null>(null);
   const [completedSurveyIds, setCompletedSurveyIds] = useState<string[]>([]);
   const [isLoadingCompleted, setIsLoadingCompleted] = useState(false);
+  const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
 
   // Load completed surveys for active session
   useEffect(() => {
@@ -50,6 +51,54 @@ export default function SurveysPage() {
 
     loadCompletedSurveys();
   }, [activeSession]);
+
+  // Handle survey selection - load full survey with questions
+  const handleSelectSurvey = async (survey: Survey) => {
+    // T092: Prevent duplicate survey submission
+    if (completedSurveyIds.includes(survey.$id)) {
+      const confirmReopen = confirm(
+        'You have already completed this survey in the current session. Do you want to view it again? (You cannot submit it twice.)'
+      );
+      if (!confirmReopen) {
+        return;
+      }
+    }
+
+    try {
+      setIsLoadingSurvey(true);
+      const fullSurvey = await getSurveyWithQuestions(survey.$id);
+      setSelectedSurvey(fullSurvey);
+    } catch (error) {
+      console.error('Failed to load survey:', error);
+      alert('Failed to load survey. Please try again.');
+    } finally {
+      setIsLoadingSurvey(false);
+    }
+  };
+
+  // Handle survey submission success
+  const handleSubmissionSuccess = async () => {
+    // Reload completed surveys
+    if (activeSession) {
+      try {
+        const responses = await getSessionResponses(activeSession.$id);
+        const completed = responses
+          .filter((r) => r.status === 'submitted')
+          .map((r) => r.surveyId);
+        setCompletedSurveyIds(completed);
+      } catch (error) {
+        console.error('Failed to reload completed surveys:', error);
+      }
+    }
+
+    // Return to survey selector
+    setSelectedSurvey(null);
+  };
+
+  // Handle cancel - return to survey list
+  const handleCancel = () => {
+    setSelectedSurvey(null);
+  };
 
   if (sessionsLoading || surveysLoading || isLoadingCompleted) {
     return (
@@ -107,19 +156,25 @@ export default function SurveysPage() {
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
             Available Surveys ({surveys.length})
           </h2>
-          <SurveySelector
-            surveys={surveys}
-            completedSurveyIds={completedSurveyIds}
-            onSelect={(survey) => setSelectedSurvey(survey)}
-          />
+          {isLoadingSurvey ? (
+            <div className="flex h-64 items-center justify-center">
+              <LoadingSpinner size="lg" text="Loading survey..." />
+            </div>
+          ) : (
+            <SurveySelector
+              surveys={surveys}
+              completedSurveyIds={completedSurveyIds}
+              onSelect={handleSelectSurvey}
+            />
+          )}
         </div>
       )}
 
-      {/* Survey Form View - Phase 6 Implementation */}
-      {selectedSurvey && (
+      {/* Survey Form View */}
+      {selectedSurvey && activeSession && (
         <div>
           <button
-            onClick={() => setSelectedSurvey(null)}
+            onClick={handleCancel}
             className="mb-6 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
           >
             <svg
@@ -146,32 +201,44 @@ export default function SurveysPage() {
               <p className="mb-6 text-gray-600">{selectedSurvey.description}</p>
             )}
 
-            {/* Placeholder for Phase 6 */}
-            <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
-              <svg
-                className="mx-auto h-16 w-16 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                Survey Form - Phase 6
-              </h3>
-              <p className="mt-2 max-w-md mx-auto text-sm text-gray-600">
-                Dynamic survey form with question rendering, GPS capture, and retry
-                submission will be implemented in Phase 6 (User Story 2).
-                <br />
-                <br />
-                Foundation complete: Services, hooks, and UI structure are ready.
-              </p>
-            </div>
+            {/* T092: Warning for completed surveys */}
+            {completedSurveyIds.includes(selectedSurvey.$id) && (
+              <div className="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4">
+                <div className="flex">
+                  <svg
+                    className="h-5 w-5 text-yellow-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-semibold text-yellow-800">
+                      Survey Already Completed
+                    </h3>
+                    <p className="mt-1 text-sm text-yellow-700">
+                      You have already submitted this survey in the current session. You cannot submit it again.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {!completedSurveyIds.includes(selectedSurvey.$id) && (
+              <SurveyForm
+                survey={selectedSurvey}
+                session={activeSession}
+                respondentId={activeSession.respondentId || ''}
+                onSuccess={handleSubmissionSuccess}
+                onCancel={handleCancel}
+              />
+            )}
           </div>
         </div>
       )}
