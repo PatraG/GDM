@@ -288,7 +288,7 @@
 
 - [ ] T122 [P] Implement global error boundary with user-friendly messages
 - [ ] T123 [P] Add loading states to all async operations
-- [ ] T124 [P] Implement toast notifications for success/error messages
+- [X] T124 [P] Implement toast notifications for success/error messages (sonner installed)
 - [ ] T125 Add network status indicator (online/offline)
 - [ ] T126 Implement form validation error display consistency across all forms
 
@@ -316,9 +316,9 @@
 
 ### Documentation
 
-- [ ] T136 [P] Create README with deployment instructions
-- [ ] T137 [P] Document Appwrite project setup steps
-- [ ] T138 [P] Document environment variables in .env.example
+- [X] T136 [P] Create README with deployment instructions
+- [X] T137 [P] Document Appwrite project setup steps (exists in docs/APPWRITE_SETUP.md)
+- [X] T138 [P] Document environment variables in .env.example
 - [ ] T139 [P] Create enumerator quick-start guide with screenshots
 - [ ] T140 [P] Create admin user guide for enumerator management
 - [ ] T141 Create troubleshooting FAQ document
