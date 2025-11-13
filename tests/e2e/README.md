@@ -10,7 +10,11 @@ tests/e2e/
 ├── auth.spec.ts                    # Authentication flow tests
 ├── enumerator-workflow.spec.ts     # Enumerator workflow tests
 ├── multi-survey.spec.ts            # Multi-survey workflow tests
-└── admin-dashboard.spec.ts         # Admin dashboard tests
+├── admin-dashboard.spec.ts         # Admin dashboard tests
+├── access-control.spec.ts          # Role-based access control tests
+├── network-retry.spec.ts           # Network failure and retry tests
+├── session-timeout.spec.ts         # Session timeout handling tests
+└── gps-permission.spec.ts          # GPS permission denial tests
 ```
 
 ## Prerequisites
@@ -114,6 +118,61 @@ npm run test:e2e:report
 - ✅ Pagination
 - ✅ Data export
 - ✅ Access control (enumerator blocked from admin routes)
+
+### Role-Based Access Control (access-control.spec.ts)
+- ✅ Enumerators blocked from admin routes
+- ✅ Admins can access all routes
+- ✅ Unauthenticated users redirected to login
+- ✅ Direct URL manipulation attempts blocked
+- ✅ Session-based access control
+- ✅ Access revocation after logout
+- ✅ Role escalation prevention
+- ✅ API endpoint protection
+- ✅ Cross-session access control
+
+### Network Failure & Retry (network-retry.spec.ts)
+- ✅ Offline detection and recovery
+- ✅ Request retry on failure
+- ✅ Error display after max retries
+- ✅ Form data persistence during network issues
+- ✅ Survey draft preservation
+- ✅ 500 server error handling
+- ✅ Timeout error handling
+- ✅ Malformed API response handling
+- ✅ Concurrent request handling
+- ✅ Loading state indicators
+
+### Session Timeout (session-timeout.spec.ts)
+- ✅ 2-hour session timeout enforcement
+- ✅ Warning at 1h 45min before timeout
+- ✅ Draft preservation on timeout
+- ✅ Automatic logout after 2 hours
+- ✅ Timeout reset on user activity
+- ✅ Respondent draft preservation
+- ✅ Survey draft preservation
+- ✅ Active session state preservation
+- ✅ Timeout warning countdown
+- ✅ Session extension option
+- ✅ Cross-tab session sync
+- ✅ Admin vs enumerator timeout parity
+
+### GPS Permission Denial (gps-permission.spec.ts)
+- ✅ GPS permission denial handling
+- ✅ Error messages for denied permission
+- ✅ Retry after GPS denial
+- ✅ Form submission without GPS
+- ✅ GPS status indicators
+- ✅ Draft saving without GPS
+- ✅ Manual coordinate entry option
+- ✅ Coordinate format validation
+- ✅ GPS enabled/disabled indicators
+- ✅ Coordinate display when available
+- ✅ Permission state changes
+- ✅ User preference persistence
+- ✅ GPS accuracy handling
+- ✅ Mid-survey GPS failure recovery
+- ✅ GPS timeout handling
+- ✅ Desktop browser without GPS
 
 ## Test Users
 
