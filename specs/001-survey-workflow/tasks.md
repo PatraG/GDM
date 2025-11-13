@@ -289,8 +289,8 @@
 - [X] T122 [P] Implement global error boundary with user-friendly messages (error.tsx, global-error.tsx, admin/error.tsx, enumerator/error.tsx)
 - [X] T123 [P] Add loading states to all async operations (loading.tsx files for app, admin, enumerator sections)
 - [X] T124 [P] Implement toast notifications for success/error messages (integrated in layout, LoginForm, EnumeratorForm, VoidResponseModal, surveys page, sessions page)
-- [ ] T125 Add network status indicator (online/offline)
-- [ ] T126 Implement form validation error display consistency across all forms
+- [x] T125 Add network status indicator (online/offline)
+- [x] T126 Implement form validation error display consistency across all forms
 
 ### Performance Optimization
 
@@ -322,7 +322,7 @@
 - [X] T138 [P] Document environment variables in .env.example
 - [X] T139 [P] Create enumerator quick-start guide with screenshots (comprehensive 800+ line guide in docs/ENUMERATOR_GUIDE.md)
 - [X] T140 [P] Create admin user guide for enumerator management (comprehensive 700+ line guide in docs/ADMIN_GUIDE.md)
-- [ ] T141 Create troubleshooting FAQ document
+- [x] T141 Create troubleshooting FAQ document
 
 ### Testing (Optional - Playwright Integration Tests)
 
