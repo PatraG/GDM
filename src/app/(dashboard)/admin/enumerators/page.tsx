@@ -10,6 +10,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { EnumeratorList } from '@/components/admin/EnumeratorList';
 import { EnumeratorForm } from '@/components/admin/EnumeratorForm';
 import { PageLoading } from '@/components/shared/LoadingSpinner';
@@ -39,7 +40,11 @@ export default function EnumeratorsPage() {
       setEnumerators(data.documents || []);
     } catch (err) {
       console.error('Load enumerators error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load enumerators');
+      const message = err instanceof Error ? err.message : 'Failed to load enumerators';
+      setError(message);
+      toast.error('Failed to load enumerators', {
+        description: message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -62,6 +67,10 @@ export default function EnumeratorsPage() {
       setCreateSuccess(true);
       setShowCreateForm(false);
       
+      toast.success('Enumerator created successfully', {
+        description: `Account created for ${data.email}`,
+      });
+      
       // Reload list
       await loadEnumerators();
       
@@ -69,6 +78,10 @@ export default function EnumeratorsPage() {
       setTimeout(() => setCreateSuccess(false), 5000);
     } catch (err) {
       console.error('Create enumerator error:', err);
+      const message = err instanceof Error ? err.message : 'Failed to create enumerator';
+      toast.error('Failed to create enumerator', {
+        description: message,
+      });
       throw err; // Re-throw to be handled by form
     }
   };
@@ -86,17 +99,27 @@ export default function EnumeratorsPage() {
         const errorData = await response.json();
         
         if (errorData.hasActiveSessions) {
-          alert('Cannot suspend enumerator with active sessions. Please ask them to close their sessions first.');
+          toast.error('Cannot suspend enumerator', {
+            description: 'Enumerator has active sessions. Please ask them to close their sessions first.',
+          });
           return;
         }
         
         throw new Error(errorData.error || 'Failed to update status');
       }
       
+      toast.success('Status updated successfully', {
+        description: `Enumerator is now ${newStatus}.`,
+      });
+      
       // Reload list
       await loadEnumerators();
     } catch (err) {
       console.error('Toggle status error:', err);
+      const message = err instanceof Error ? err.message : 'Failed to update status';
+      toast.error('Failed to update status', {
+        description: message,
+      });
       throw err;
     }
   };

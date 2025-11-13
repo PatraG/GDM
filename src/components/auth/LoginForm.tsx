@@ -12,6 +12,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import { loginSchema, type LoginFormData } from '@/lib/utils/validation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { InlineSpinner } from '@/components/shared/LoadingSpinner';
@@ -41,10 +42,16 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
       setLoginError(null);
       await login(data);
       
+      toast.success('Login successful!', {
+        description: 'Welcome back to the survey system.',
+      });
       onSuccess?.();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Login failed';
       setLoginError(message);
+      toast.error('Login failed', {
+        description: message,
+      });
       onError?.(message);
     }
   };

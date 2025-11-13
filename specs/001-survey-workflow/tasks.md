@@ -288,7 +288,7 @@
 
 - [ ] T122 [P] Implement global error boundary with user-friendly messages
 - [ ] T123 [P] Add loading states to all async operations
-- [X] T124 [P] Implement toast notifications for success/error messages (sonner installed)
+- [X] T124 [P] Implement toast notifications for success/error messages (integrated in layout, LoginForm, EnumeratorForm, VoidResponseModal, surveys page, sessions page)
 - [ ] T125 Add network status indicator (online/offline)
 - [ ] T126 Implement form validation error display consistency across all forms
 

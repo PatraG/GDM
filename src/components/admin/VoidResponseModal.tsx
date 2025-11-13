@@ -14,6 +14,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -71,11 +72,19 @@ export default function VoidResponseModal({
     try {
       await onVoid(responseId, reason.trim());
       
+      toast.success('Response voided successfully', {
+        description: `Survey response ${responseId} has been voided.`,
+      });
+      
       // Reset and close
       setReason('');
       onOpenChange(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to void response');
+      const message = err instanceof Error ? err.message : 'Failed to void response';
+      setError(message);
+      toast.error('Failed to void response', {
+        description: message,
+      });
     } finally {
       setLoading(false);
     }

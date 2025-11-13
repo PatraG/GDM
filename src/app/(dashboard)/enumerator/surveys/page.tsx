@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useSessions } from '@/lib/hooks/useSessions';
 import { useSurveys } from '@/lib/hooks/useSurveys';
@@ -44,6 +45,9 @@ export default function SurveysPage() {
         setCompletedSurveyIds(completed);
       } catch (error) {
         console.error('Failed to load completed surveys:', error);
+        toast.error('Failed to load completed surveys', {
+          description: error instanceof Error ? error.message : 'Please try again',
+        });
       } finally {
         setIsLoadingCompleted(false);
       }
@@ -70,7 +74,9 @@ export default function SurveysPage() {
       setSelectedSurvey(fullSurvey);
     } catch (error) {
       console.error('Failed to load survey:', error);
-      alert('Failed to load survey. Please try again.');
+      toast.error('Failed to load survey', {
+        description: 'Please try again or contact support if the issue persists.',
+      });
     } finally {
       setIsLoadingSurvey(false);
     }
@@ -86,6 +92,10 @@ export default function SurveysPage() {
           .filter((r) => r.status === 'submitted')
           .map((r) => r.surveyId);
         setCompletedSurveyIds(completed);
+        
+        toast.success('Survey submitted successfully!', {
+          description: 'Your responses have been recorded.',
+        });
       } catch (error) {
         console.error('Failed to reload completed surveys:', error);
       }

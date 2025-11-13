@@ -14,6 +14,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useSessions } from '@/lib/hooks/useSessions';
 import { SessionCard } from '@/components/enumerator/SessionCard';
@@ -67,7 +68,11 @@ export default function SessionsPage() {
         })
         .catch((err) => {
           console.error('Failed to load pre-selected respondent:', err);
-          setCreateError('Failed to load selected respondent');
+          const message = err instanceof Error ? err.message : 'Failed to load selected respondent';
+          setCreateError(message);
+          toast.error('Failed to load respondent', {
+            description: message,
+          });
         });
     }
   }, [searchParams, activeSession]);
@@ -99,6 +104,9 @@ export default function SessionsPage() {
         enumeratorId: user?.$id || '',
       });
 
+      toast.success('Session started successfully!', {
+        description: `Now collecting data for ${respondent.pseudonym}`,
+      });
       setSuccessMessage(`Session started with respondent ${respondent.pseudonym}`);
       setViewMode('active');
       
@@ -107,6 +115,9 @@ export default function SessionsPage() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create session';
       setCreateError(message);
+      toast.error('Failed to create session', {
+        description: message,
+      });
     } finally {
       setIsCreating(false);
     }
@@ -123,6 +134,10 @@ export default function SessionsPage() {
     try {
       setIsClosing(true);
       await closeSession(sessionId, 'manual');
+      
+      toast.success('Session closed successfully', {
+        description: 'All responses have been saved.',
+      });
       setSuccessMessage('Session closed successfully');
       setViewMode('history');
       
@@ -130,6 +145,10 @@ export default function SessionsPage() {
       setTimeout(() => setSuccessMessage(null), 5000);
     } catch (err) {
       console.error('Failed to close session:', err);
+      const message = err instanceof Error ? err.message : 'Failed to close session';
+      toast.error('Failed to close session', {
+        description: message,
+      });
     } finally {
       setIsClosing(false);
     }
