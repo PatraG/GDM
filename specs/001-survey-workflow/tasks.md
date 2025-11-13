@@ -143,56 +143,56 @@
 
 ### Enumerator Home Dashboard
 
-- [ ] T054 [US1] Create enumerator layout in src/app/(dashboard)/enumerator/layout.tsx
-- [ ] T055 [US1] Create enumerator home page in src/app/(dashboard)/enumerator/home/page.tsx
+- [X] T054 [US1] Create enumerator layout in src/app/(dashboard)/enumerator/layout.tsx
+- [X] T055 [US1] Create enumerator home page in src/app/(dashboard)/enumerator/home/page.tsx
 
 ### Respondent Management
 
-- [ ] T056 [P] [US1] Create respondent service in src/lib/services/respondentService.ts (create, list, search)
-- [ ] T057 [US1] Create respondents page in src/app/(dashboard)/enumerator/respondents/page.tsx
-- [ ] T058 [P] [US1] Create RespondentForm component in src/components/enumerator/RespondentForm.tsx
-- [ ] T058a [US1] Add validation to block name-like patterns in respondent form fields (detect capitalized words, common name patterns)
-- [ ] T059 [P] [US1] Create RespondentSearch component in src/components/enumerator/RespondentSearch.tsx
-- [ ] T060 [US1] Implement respondent code generator integration (call from RespondentForm)
-- [ ] T061 [US1] Add consent validation (checkbox must be checked before saving)
-- [ ] T062 [US1] Implement respondent search by code and demographics
+- [X] T056 [P] [US1] Create respondent service in src/lib/services/respondentService.ts (create, list, search)
+- [X] T057 [US1] Create respondents page in src/app/(dashboard)/enumerator/respondents/page.tsx
+- [X] T058 [P] [US1] Create RespondentForm component in src/components/enumerator/RespondentForm.tsx
+- [X] T058a [US1] Add validation to block name-like patterns in respondent form fields (detect capitalized words, common name patterns)
+- [X] T059 [P] [US1] Create RespondentSearch component in src/components/enumerator/RespondentSearch.tsx
+- [X] T060 [US1] Implement respondent code generator integration (call from RespondentForm)
+- [X] T061 [US1] Add consent validation (checkbox must be checked before saving)
+- [X] T062 [US1] Implement respondent search by code and demographics
 
 ### Session Management
 
-- [ ] T063 [P] [US1] Create session service in src/lib/services/sessionService.ts (create, close, list)
-- [ ] T064 [P] [US1] Create useSession hook in src/lib/hooks/useSessions.ts (active session state)
-- [ ] T065 [US1] Create sessions page in src/app/(dashboard)/enumerator/sessions/page.tsx
-- [ ] T066 [P] [US1] Create SessionCard component in src/components/enumerator/SessionCard.tsx
-- [ ] T067 [US1] Implement session creation flow (link to respondent and enumerator)
-- [ ] T068 [US1] Implement session auto-close timer (2-hour inactivity with warning at 1:45)
-- [ ] T069 [US1] Implement manual session close functionality
-- [ ] T069a [US1] Add validation to prevent reopening closed sessions
-- [ ] T070 [US1] Add draft preservation on timeout (keep response status=draft)
+- [X] T063 [P] [US1] Create session service in src/lib/services/sessionService.ts (create, close, list)
+- [X] T064 [P] [US1] Create useSession hook in src/lib/hooks/useSessions.ts (active session state)
+- [X] T065 [US1] Create sessions page in src/app/(dashboard)/enumerator/sessions/page.tsx
+- [X] T066 [P] [US1] Create SessionCard component in src/components/enumerator/SessionCard.tsx
+- [X] T067 [US1] Implement session creation flow (link to respondent and enumerator)
+- [X] T068 [US1] Implement session auto-close timer (2-hour inactivity with warning at 1:45)
+- [X] T069 [US1] Implement manual session close functionality
+- [X] T069a [US1] Add validation to prevent reopening closed sessions
+- [X] T070 [US1] Add draft preservation on timeout (keep response status=draft)
 
 ### Survey Engine
 
-- [ ] T071 [P] [US1] Create survey service in src/lib/services/surveyService.ts (getSurveys, getSurveyWithQuestions)
-- [ ] T072 [P] [US1] Create useSurveys hook in src/lib/hooks/useSurveys.ts (survey data fetching)
-- [ ] T073 [US1] Create surveys page in src/app/(dashboard)/enumerator/surveys/page.tsx
-- [ ] T074 [P] [US1] Create SurveySelector component in src/components/enumerator/SurveySelector.tsx
-- [ ] T075 [P] [US1] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation)
-- [ ] T076 [US1] Implement dynamic question rendering (text, radio, checkbox, scale)
-- [ ] T077 [US1] Integrate React Hook Form with Zod validation in SurveyForm
-- [ ] T078 [US1] Implement GPS capture on survey load (browser Geolocation API)
-- [ ] T079 [US1] Add GPS permission handling and error states
-- [ ] T080 [US1] Display captured GPS coordinates to enumerator (readonly field)
+- [X] T071 [P] [US1] Create survey service in src/lib/services/surveyService.ts (getSurveys, getSurveyWithQuestions)
+- [X] T072 [P] [US1] Create useSurveys hook in src/lib/hooks/useSurveys.ts (survey data fetching)
+- [X] T073 [US1] Create surveys page in src/app/(dashboard)/enumerator/surveys/page.tsx
+- [X] T074 [P] [US1] Create SurveySelector component in src/components/enumerator/SurveySelector.tsx
+- [ ] T075 [P] [US1] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation) - **Moved to Phase 6 (US2)**
+- [ ] T076 [US1] Implement dynamic question rendering (text, radio, checkbox, scale) - **Moved to Phase 6 (US2)**
+- [ ] T077 [US1] Integrate React Hook Form with Zod validation in SurveyForm - **Moved to Phase 6 (US2)**
+- [X] T078 [US1] Implement GPS capture on survey load (browser Geolocation API)
+- [X] T079 [US1] Add GPS permission handling and error states
+- [ ] T080 [US1] Display captured GPS coordinates to enumerator (readonly field) - **Moved to Phase 6 (US2)**
 
 ### Response Submission
 
-- [ ] T081 [P] [US1] Create response service in src/lib/services/responseService.ts (submitResponse, saveDraft)
-- [ ] T082 [US1] Implement response creation with answers (transaction-like pattern)
-- [ ] T083 [US1] Implement retry mechanism with exponential backoff (initial delay: 2s, multiplier: 2x, max attempts: 3)
-- [ ] T084 [US1] Add retry countdown timer UI
-- [ ] T085 [US1] Create submission confirmation UI with success message
-- [ ] T086 [US1] Implement draft save functionality (status=draft)
-- [ ] T087 [US1] Add validation to prevent submission with empty required fields
+- [X] T081 [P] [US1] Create response service in src/lib/services/responseService.ts (submitResponse, saveDraft)
+- [X] T082 [US1] Implement response creation with answers (transaction-like pattern)
+- [X] T083 [US1] Implement retry mechanism with exponential backoff (initial delay: 2s, multiplier: 2x, max attempts: 3)
+- [ ] T084 [US1] Add retry countdown timer UI - **Moved to Phase 6 (US2)**
+- [ ] T085 [US1] Create submission confirmation UI with success message - **Moved to Phase 6 (US2)**
+- [X] T086 [US1] Implement draft save functionality (status=draft)
+- [X] T087 [US1] Add validation to prevent submission with empty required fields
 
-**Checkpoint**: At this point, User Story 1 should be fully functional - enumerators can conduct complete field surveys from login to submission.
+**Checkpoint**: Phase 5 foundation complete (28/34 tasks) - Services, hooks, UI structure, GPS utilities, and response retry logic implemented. Dynamic survey form rendering (T075-T077, T080, T084-T085) moved to Phase 6 for full integration with US2 multi-survey workflow.
 
 ---
 
@@ -202,12 +202,21 @@
 
 **Independent Test**: After P1 implementation, test by submitting one survey in a session, then selecting another survey for the same respondent in the same session.
 
-### Implementation for User Story 2
+### Dynamic Survey Form (moved from Phase 5)
+
+- [ ] T075 [P] [US1+US2] Create SurveyForm component in src/components/enumerator/SurveyForm.tsx (dynamic form generation)
+- [ ] T076 [US1+US2] Implement dynamic question rendering (text, radio, checkbox, scale)
+- [ ] T077 [US1+US2] Integrate React Hook Form with Zod validation in SurveyForm
+- [ ] T080 [US1+US2] Display captured GPS coordinates to enumerator (readonly field)
+- [ ] T084 [US1+US2] Add retry countdown timer UI
+- [ ] T085 [US1+US2] Create submission confirmation UI with success message
+
+### Multi-Survey Workflow (User Story 2)
 
 - [ ] T088 [US2] Add "Fill Another Survey" button to submission confirmation UI
 - [ ] T089 [US2] Implement post-submission flow (return to SurveySelector without closing session)
-- [ ] T090 [US2] Query responses by sessionId to track completed surveys
-- [ ] T091 [US2] Add checkmark/badge to completed surveys in SurveySelector
+- [ ] T090 [US2] Query responses by sessionId to track completed surveys (already implemented in surveys/page.tsx)
+- [ ] T091 [US2] Add checkmark/badge to completed surveys in SurveySelector (already implemented)
 - [ ] T092 [US2] Prevent duplicate survey submission in same session (UI warning)
 - [ ] T093 [P] [US2] Create SessionSummary component in src/components/enumerator/SessionSummary.tsx
 - [ ] T094 [US2] Display all submitted surveys with timestamps in SessionSummary
@@ -215,6 +224,8 @@
 - [ ] T096 [US2] Add session summary view to session page
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - enumerators can fill multiple surveys per session.
+
+**Note**: Tasks T090 and T091 are already complete from Phase 5 (completion tracking implemented in surveys/page.tsx and SurveySelector component).
 
 ---
 
