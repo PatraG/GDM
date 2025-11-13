@@ -105,7 +105,9 @@ async function createRespondentsCollection() {
             'Respondents',
             [
                 Permission.read(Role.user('admin')),
+                Permission.read(Role.users()),  // All authenticated users can read
                 Permission.create(Role.user('admin')),
+                Permission.create(Role.label('enumerator')),  // Enumerators can create
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
             ]
@@ -145,7 +147,9 @@ async function createSessionsCollection() {
             'Sessions',
             [
                 Permission.read(Role.user('admin')),
+                Permission.read(Role.users()),  // All authenticated users can read
                 Permission.create(Role.user('admin')),
+                Permission.create(Role.label('enumerator')),  // Enumerators can create
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
             ]
@@ -182,7 +186,7 @@ async function createSurveysCollection() {
             collectionId,
             'Surveys',
             [
-                Permission.read(Role.any()),
+                Permission.read(Role.users()),  // Authenticated users only
                 Permission.create(Role.user('admin')),
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
@@ -216,7 +220,7 @@ async function createQuestionsCollection() {
             collectionId,
             'Questions',
             [
-                Permission.read(Role.any()),
+                Permission.read(Role.users()),  // Authenticated users only
                 Permission.create(Role.user('admin')),
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
@@ -251,7 +255,7 @@ async function createOptionsCollection() {
             collectionId,
             'Options',
             [
-                Permission.read(Role.any()),
+                Permission.read(Role.users()),  // Authenticated users only
                 Permission.create(Role.user('admin')),
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
@@ -284,7 +288,9 @@ async function createResponsesCollection() {
             'Responses',
             [
                 Permission.read(Role.user('admin')),
+                Permission.read(Role.users()),  // All authenticated users can read
                 Permission.create(Role.user('admin')),
+                Permission.create(Role.label('enumerator')),  // Enumerators can submit
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
             ]
@@ -327,7 +333,9 @@ async function createAnswersCollection() {
             'Answers',
             [
                 Permission.read(Role.user('admin')),
+                Permission.read(Role.users()),  // All authenticated users can read
                 Permission.create(Role.user('admin')),
+                Permission.create(Role.label('enumerator')),  // Enumerators can submit
                 Permission.update(Role.user('admin')),
                 Permission.delete(Role.user('admin')),
             ]
