@@ -126,6 +126,7 @@
 - [ ] T049 [US4] Create Appwrite database helpers in src/lib/appwrite/databases.ts (CRUD wrappers)
 - [ ] T050 [US4] Implement enumerator creation flow (Appwrite Auth + users collection)
 - [ ] T051 [US4] Implement activation/deactivation with session warning modal
+- [ ] T051a [US4] Add validation to block authentication attempts by suspended enumerators
 - [ ] T052 [US4] Create enumerator detail view in src/app/(dashboard)/admin/enumerators/[id]/page.tsx
 - [ ] T053 [US4] Add suspension warning logic (check for open sessions before deactivation)
 
@@ -163,6 +164,7 @@
 - [ ] T067 [US1] Implement session creation flow (link to respondent and enumerator)
 - [ ] T068 [US1] Implement session auto-close timer (2-hour inactivity with warning at 1:45)
 - [ ] T069 [US1] Implement manual session close functionality
+- [ ] T069a [US1] Add validation to prevent reopening closed sessions
 - [ ] T070 [US1] Add draft preservation on timeout (keep response status=draft)
 
 ### Survey Engine
@@ -291,6 +293,13 @@
 - [ ] T133 Add CSRF protection to all forms
 - [ ] T134 Verify no PII exposure in API responses (audit all endpoints)
 - [ ] T135 Test GPS coordinate precision (ensure privacy compliance)
+
+### Observability & Logging
+
+- [ ] T135a [P] Create logging service in src/lib/services/loggingService.ts
+- [ ] T135b Log all authentication attempts (success/failure) with timestamp and userId
+- [ ] T135c Log all survey submissions with metadata (responseId, enumeratorId, timestamp, location)
+- [ ] T135d Integrate error tracking service (optional: Sentry or Appwrite logging collection)
 
 ### Documentation
 
@@ -502,32 +511,32 @@ With multiple developers:
 
 ## Task Summary
 
-**Total Tasks**: 155 tasks
+**Total Tasks**: 161 tasks (updated with fixes)
 
 **Breakdown by Phase**:
 - Phase 1 (Setup): 8 tasks
 - Phase 2 (Foundational): 25 tasks
 - Phase 3 (US6 - Auth): 10 tasks
-- Phase 4 (US4 - Admin): 10 tasks
-- Phase 5 (US1 - Core Survey): 34 tasks
+- Phase 4 (US4 - Admin): 11 tasks (added T051a)
+- Phase 5 (US1 - Core Survey): 35 tasks (added T069a)
 - Phase 6 (US2 - Multi-Survey): 9 tasks
 - Phase 7 (US3 - Search): 8 tasks
 - Phase 8 (US5 - Admin Dashboard): 17 tasks
-- Phase 9 (Polish): 34 tasks
+- Phase 9 (Polish): 38 tasks (added T135a-d)
 
-**MVP Tasks**: 87 tasks (Phases 1-5)
+**MVP Tasks**: 89 tasks (Phases 1-5, updated)
 
 **Parallel Opportunities**: 45+ tasks can run in parallel (marked with [P])
 
 **Independent Test Criteria**:
 - ✅ US6: Login/logout works, session persists, unauthorized access blocked
-- ✅ US4: Admin creates enumerator, enumerator logs in with correct role
-- ✅ US1: Complete survey workflow from respondent registration to submission
+- ✅ US4: Admin creates enumerator, enumerator logs in with correct role, suspended users blocked (T051a)
+- ✅ US1: Complete survey workflow from respondent registration to submission, closed sessions cannot be reopened (T069a)
 - ✅ US2: Multiple surveys submitted in single session
 - ✅ US3: Existing respondent found and new session started
 - ✅ US5: Admin sees submission statistics and can void responses
 
-**Suggested MVP Scope**: Phases 1-5 (US6 + US4 + US1) = 87 tasks
+**Suggested MVP Scope**: Phases 1-5 (US6 + US4 + US1) = 89 tasks
 
 ---
 

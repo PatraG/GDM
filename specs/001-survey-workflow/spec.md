@@ -236,8 +236,8 @@ Enumerators must authenticate with email and password to access the system, ensu
 
 **Session/Visit Management (Enumerator)**:
 - **FR-019**: Enumerators MUST be able to start a new session for a selected respondent
-- **FR-020**: System MUST create session record with: sessionId, respondentId, enumeratorId, startedAt timestamp, status=open
-- **FR-021**: System MUST allow only one open session per enumerator at a time (or clearly distinguish multiple open sessions)
+- **FR-020**: System MUST create session record with: sessionId, respondentId, enumeratorId, startTime timestamp, status=open
+- **FR-021**: System MUST allow only one open session per enumerator at a time; UI MUST clearly indicate active session and prevent starting a new session until current session is closed
 - **FR-022**: Enumerators MUST be able to end/close a session explicitly or system auto-closes after 2 hours of inactivity
 - **FR-022a**: When session auto-closes due to timeout, system MUST preserve any draft responses and allow enumerator to resume work by starting a new session
 - **FR-023**: System MUST record session metadata: start/end timestamps, status transitions
@@ -266,7 +266,7 @@ Enumerators must authenticate with email and password to access the system, ensu
 - **FR-039**: Submitted responses MUST be immutable for enumerators (no edit capability)
 - **FR-040**: Administrators MUST be able to void/invalidate responses via soft delete (status flag change)
 - **FR-041**: System MUST NOT allow hard deletion of submitted responses; use status flags (active, void, archived)
-- **FR-042**: System MUST log all response submissions with: timestamp, enumeratorId, responseId
+- **FR-042**: System MUST log all response submissions with: timestamp, enumeratorId, responseId; logs stored in dedicated Appwrite collection or external logging service (e.g., Sentry)
 - **FR-043**: System MUST version surveys; each response MUST reference the exact survey version used
 
 **Admin Oversight**:
@@ -284,12 +284,12 @@ Enumerators must authenticate with email and password to access the system, ensu
 
 **Respondent**:
 - Represents: Survey participant with pseudonymized identity
-- Key attributes: respondentId, pseudonymousCode (unique, format: "R-" + 5-digit sequential number, e.g., "R-00001"), ageRange (e.g., "18-24"), sex, administrativeArea, consentGiven (boolean), consentTimestamp, createdById (enumerator), createdAt, lastSeenAt
+- Key attributes: respondentId, pseudonymousCode (unique, format: "R-" + 5-digit sequential number, e.g., "R-00001"), ageRange (e.g., "18-24"), sex, administrativeArea, consentGiven (boolean), consentTimestamp, createdById (enumerator), createdAt, lastSessionDate (computed from most recent session.startedAt or stored denormalized for performance)
 - Relationships: One respondent has many sessions over time; created by one enumerator
 
-**Session (Encounter)**:
+**Session**:
 - Represents: A single field visit/encounter with a respondent
-- Key attributes: sessionId, respondentId, enumeratorId, startedAt, endedAt, status (open | closed), metadata (notes, conditions)
+- Key attributes: sessionId, respondentId, enumeratorId, startTime, endTime, status (open | closed | timeout), metadata (notes, conditions)
 - Relationships: One session belongs to one respondent and one enumerator; one session contains many responses (one per survey filled)
 
 **Survey**:
