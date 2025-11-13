@@ -326,11 +326,11 @@
 
 ### Testing (Optional - Playwright Integration Tests)
 
-- [ ] T142 [P] Setup Playwright test infrastructure in tests/e2e/
-- [ ] T143 [P] Write login/logout flow test in tests/e2e/auth.spec.ts
-- [ ] T144 [P] Write enumerator workflow E2E test in tests/e2e/enumerator-workflow.spec.ts
-- [ ] T145 [P] Write multi-survey workflow test in tests/e2e/multi-survey.spec.ts
-- [ ] T146 [P] Write admin dashboard test in tests/e2e/admin-dashboard.spec.ts
+- [x] T142 [P] Setup Playwright test infrastructure in tests/e2e/
+- [x] T143 [P] Write login/logout flow test in tests/e2e/auth.spec.ts
+- [x] T144 [P] Write enumerator workflow E2E test in tests/e2e/enumerator-workflow.spec.ts
+- [x] T145 [P] Write multi-survey workflow test in tests/e2e/multi-survey.spec.ts
+- [x] T146 [P] Write admin dashboard test in tests/e2e/admin-dashboard.spec.ts
 - [ ] T147 Test role-based access control (enumerators blocked from admin routes)
 - [ ] T148 Test network failure retry mechanism
 - [ ] T149 Test session timeout with draft preservation

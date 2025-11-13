@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "setup:appwrite": "tsx scripts/setup-appwrite.ts"
+    "setup:appwrite": "tsx scripts/setup-appwrite.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@appwrite.io/pink-icons": "^1.0.0",
@@ -37,6 +42,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.4",
     "@types/react-dom": "^19.2.3",
