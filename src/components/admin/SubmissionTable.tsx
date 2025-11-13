@@ -45,6 +45,7 @@ import {
 import { formatDate, formatGPSCoordinates } from '@/lib/utils/formatters';
 import { ResponseWithDetails } from '@/lib/types/response';
 import VoidResponseModal from './VoidResponseModal';
+import { Pagination } from '@/components/shared/Pagination';
 
 interface SubmissionTableProps {
   responses: ResponseWithDetails[];
@@ -73,6 +74,10 @@ export default function SubmissionTable({
   const [selectedEnumerator, setSelectedEnumerator] = useState<string>('all');
   const [selectedSurvey, setSelectedSurvey] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
 
   // Void modal state
   const [voidModalOpen, setVoidModalOpen] = useState(false);
@@ -111,6 +116,16 @@ export default function SubmissionTable({
     });
   }, [responses, dateFrom, dateTo, selectedEnumerator, selectedSurvey, selectedStatus]);
 
+  // Paginated responses
+  const paginatedResponses = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredResponses.slice(startIndex, endIndex);
+  }, [filteredResponses, currentPage, pageSize]);
+
+  // Total pages
+  const totalPages = Math.ceil(filteredResponses.length / pageSize);
+
   // Clear all filters
   const clearFilters = () => {
     setDateFrom('');
@@ -118,6 +133,18 @@ export default function SubmissionTable({
     setSelectedEnumerator('all');
     setSelectedSurvey('all');
     setSelectedStatus('all');
+    setCurrentPage(1); // Reset to first page when clearing filters
+  };
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Handle page size change
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page when changing page size
   };
 
   // Handle void button click
@@ -321,7 +348,7 @@ export default function SubmissionTable({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredResponses.map((response) => (
+                  paginatedResponses.map((response) => (
                     <TableRow key={response.$id}>
                       <TableCell className="font-mono text-xs">
                         {response.$id.slice(0, 8)}...
@@ -372,6 +399,21 @@ export default function SubmissionTable({
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {filteredResponses.length > 0 && (
+            <div className="mt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                totalCount={filteredResponses.length}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                pageSizeOptions={[25, 50, 100, 200]}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 

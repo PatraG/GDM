@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { searchRespondents } from '@/lib/services/respondentService';
 import type { Respondent, AgeRange, Sex } from '@/lib/types/respondent';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Pagination } from '@/components/shared/Pagination';
 import { formatAgeRange, formatSex, formatRelativeTime } from '@/lib/utils/formatters';
 
 interface RespondentSearchProps {
@@ -32,9 +33,13 @@ interface SearchFormData {
 
 export function RespondentSearch({ enumeratorId, onSelect }: RespondentSearchProps) {
   const [results, setResults] = useState<Respondent[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastSearchParams, setLastSearchParams] = useState<SearchFormData | null>(null);
 
   const { register, handleSubmit, reset } = useForm<SearchFormData>({
     defaultValues: {
@@ -45,21 +50,23 @@ export function RespondentSearch({ enumeratorId, onSelect }: RespondentSearchPro
     },
   });
 
-  const onSubmit = async (data: SearchFormData) => {
+  const performSearch = async (data: SearchFormData, page: number, size: number) => {
     try {
       setError(null);
       setIsSearching(true);
-      setHasSearched(true);
 
       const searchParams = {
         pseudonym: data.pseudonym || undefined,
         ageRange: data.ageRange || undefined,
         sex: data.sex || undefined,
         adminArea: data.adminArea || undefined,
+        limit: size,
+        offset: (page - 1) * size,
       };
 
-      const { respondents } = await searchRespondents(enumeratorId, searchParams);
+      const { respondents, total } = await searchRespondents(enumeratorId, searchParams);
       setResults(respondents);
+      setTotalCount(total);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to search respondents';
       setError(message);
@@ -68,11 +75,36 @@ export function RespondentSearch({ enumeratorId, onSelect }: RespondentSearchPro
     }
   };
 
+  const onSubmit = async (data: SearchFormData) => {
+    setHasSearched(true);
+    setLastSearchParams(data);
+    setCurrentPage(1); // Reset to first page on new search
+    await performSearch(data, 1, pageSize);
+  };
+
+  const handlePageChange = async (page: number) => {
+    if (lastSearchParams) {
+      setCurrentPage(page);
+      await performSearch(lastSearchParams, page, pageSize);
+    }
+  };
+
+  const handlePageSizeChange = async (size: number) => {
+    if (lastSearchParams) {
+      setPageSize(size);
+      setCurrentPage(1); // Reset to first page when changing page size
+      await performSearch(lastSearchParams, 1, size);
+    }
+  };
+
   const handleClear = () => {
     reset();
     setResults([]);
+    setTotalCount(0);
+    setCurrentPage(1);
     setHasSearched(false);
     setError(null);
+    setLastSearchParams(null);
   };
 
   return (
@@ -199,7 +231,7 @@ export function RespondentSearch({ enumeratorId, onSelect }: RespondentSearchPro
       {hasSearched && (
         <div>
           <h3 className="mb-3 text-lg font-semibold text-gray-900">
-            Search Results ({results.length})
+            Search Results ({totalCount})
           </h3>
 
           {results.length === 0 ? (
@@ -222,69 +254,84 @@ export function RespondentSearch({ enumeratorId, onSelect }: RespondentSearchPro
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-gray-200 shadow">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Code
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Age Range
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Sex
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Admin Area
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                      Created
-                    </th>
-                    {onSelect && (
-                      <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Action
+            <div className="space-y-4">
+              <div className="overflow-hidden rounded-lg border border-gray-200 shadow">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Code
                       </th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {results.map((respondent) => (
-                    <tr key={respondent.$id} className="hover:bg-gray-50">
-                      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-                        <a
-                          href={`/enumerator/respondents/${respondent.$id}`}
-                          className="text-blue-600 hover:text-blue-900 hover:underline"
-                        >
-                          {respondent.pseudonym}
-                        </a>
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                        {formatAgeRange(respondent.ageRange)}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                        {formatSex(respondent.sex)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {respondent.adminArea}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                        {formatRelativeTime(respondent.createdAt)}
-                      </td>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Age Range
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Sex
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Admin Area
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Created
+                      </th>
                       {onSelect && (
-                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
-                          <button
-                            onClick={() => onSelect(respondent)}
-                            className="text-blue-600 hover:text-blue-900 font-medium"
-                          >
-                            Select
-                          </button>
-                        </td>
+                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Action
+                        </th>
                       )}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {results.map((respondent) => (
+                      <tr key={respondent.$id} className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                          <a
+                            href={`/enumerator/respondents/${respondent.$id}`}
+                            className="text-blue-600 hover:text-blue-900 hover:underline"
+                          >
+                            {respondent.pseudonym}
+                          </a>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                          {formatAgeRange(respondent.ageRange)}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                          {formatSex(respondent.sex)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {respondent.adminArea}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                          {formatRelativeTime(respondent.createdAt)}
+                        </td>
+                        {onSelect && (
+                          <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
+                            <button
+                              onClick={() => onSelect(respondent)}
+                              className="text-blue-600 hover:text-blue-900 font-medium"
+                            >
+                              Select
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination */}
+              {totalCount > pageSize && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(totalCount / pageSize)}
+                  pageSize={pageSize}
+                  totalCount={totalCount}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                  pageSizeOptions={[25, 50, 100]}
+                />
+              )}
             </div>
           )}
         </div>
