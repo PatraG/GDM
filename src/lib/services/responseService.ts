@@ -15,8 +15,8 @@ import {
   createDocument,
   updateDocument,
 } from '@/lib/appwrite/databases';
-import { COLLECTIONS, RETRY_CONFIG } from '@/lib/appwrite/constants';
-import type { Response, ResponseCreate } from '@/lib/types/response';
+import { COLLECTIONS, RETRY_CONFIG, RESPONSE_STATUS } from '@/lib/appwrite/constants';
+import type { Response, ResponseCreate, ResponseVoid } from '@/lib/types/response';
 import type { Answer, AnswerCreate } from '@/lib/types/response';
 import { Query } from 'appwrite';
 
@@ -294,4 +294,167 @@ export async function isSurveyCompleted(
 
   const result = await listDocuments(COLLECTIONS.RESPONSES, queries);
   return result.total > 0;
+}
+
+/**
+ * Void a response (admin only, FR-040, FR-047)
+ * Marks a submitted response as voided with reason
+ * Creates audit trail for the void action
+ * 
+ * @param responseId Response ID to void
+ * @param voidData Void metadata (admin ID and reason)
+ * @returns Updated response with voided status
+ * @throws Error if response not found or already voided
+ */
+export async function voidResponse(
+  responseId: string,
+  voidData: ResponseVoid
+): Promise<Response> {
+  // Get current response
+  const response = await getResponse(responseId);
+
+  // Validation: Cannot void draft responses
+  if (response.status === RESPONSE_STATUS.DRAFT) {
+    throw new Error('Cannot void draft responses. Only submitted responses can be voided.');
+  }
+
+  // Validation: Cannot void already voided responses
+  if (response.status === RESPONSE_STATUS.VOIDED) {
+    throw new Error('Response is already voided.');
+  }
+
+  // Validation: Void reason is required
+  if (!voidData.voidReason || voidData.voidReason.trim() === '') {
+    throw new Error('Void reason is required.');
+  }
+
+  // Update response with void status
+  const updateData = {
+    status: RESPONSE_STATUS.VOIDED,
+    voidedBy: voidData.voidedBy,
+    voidReason: voidData.voidReason.trim(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  const updated = await updateDocument(
+    COLLECTIONS.RESPONSES,
+    responseId,
+    updateData
+  );
+
+  // TODO (T113): Create audit trail entry in a separate audit collection
+  // For now, the void action is logged in the response record itself
+  // Future enhancement: Create AUDIT_LOGS collection with entries like:
+  // {
+  //   action: 'VOID_RESPONSE',
+  //   entityType: 'response',
+  //   entityId: responseId,
+  //   performedBy: voidData.voidedBy,
+  //   reason: voidData.voidReason,
+  //   timestamp: new Date().toISOString(),
+  //   metadata: { previousStatus: response.status }
+  // }
+
+  return updated as Response;
+}
+
+/**
+ * Search and list responses with filters (admin dashboard)
+ * Supports pagination and multiple filter criteria
+ * 
+ * @param filters Filter criteria
+ * @param limit Results per page
+ * @param offset Page offset
+ * @returns Paginated list of responses
+ */
+export async function listResponses(
+  filters?: {
+    sessionId?: string;
+    respondentId?: string;
+    surveyId?: string;
+    status?: string;
+    submittedFrom?: string;
+    submittedTo?: string;
+    enumeratorId?: string;
+  },
+  limit = 50,
+  offset = 0
+): Promise<{ responses: Response[]; total: number }> {
+  const queries: string[] = [
+    Query.limit(limit),
+    Query.offset(offset),
+    Query.orderDesc('$createdAt'),
+  ];
+
+  // Add filters
+  if (filters?.sessionId) {
+    queries.push(Query.equal('sessionId', filters.sessionId));
+  }
+  if (filters?.respondentId) {
+    queries.push(Query.equal('respondentId', filters.respondentId));
+  }
+  if (filters?.surveyId) {
+    queries.push(Query.equal('surveyId', filters.surveyId));
+  }
+  if (filters?.status) {
+    queries.push(Query.equal('status', filters.status));
+  }
+  if (filters?.submittedFrom) {
+    queries.push(Query.greaterThanEqual('submittedAt', filters.submittedFrom));
+  }
+  if (filters?.submittedTo) {
+    queries.push(Query.lessThanEqual('submittedAt', filters.submittedTo));
+  }
+
+  // Note: enumeratorId filter requires joining with sessions
+  // For MVP, we'll handle this client-side or through session pre-filtering
+
+  const result = await listDocuments(COLLECTIONS.RESPONSES, queries);
+
+  return {
+    responses: result.documents as Response[],
+    total: result.total,
+  };
+}
+
+/**
+ * Get dashboard statistics for admin overview
+ * Returns aggregate counts and metrics
+ * 
+ * @returns Dashboard statistics
+ */
+export async function getDashboardStats(): Promise<{
+  totalResponses: number;
+  responsesSubmitted: number;
+  responsesVoided: number;
+  responsesDraft: number;
+  responsesToday: number;
+}> {
+  // Get all responses
+  const allResult = await listDocuments(COLLECTIONS.RESPONSES, [
+    Query.limit(10000), // Assume max 10k for MVP
+  ]);
+
+  const responses = allResult.documents as Response[];
+
+  // Calculate statistics
+  const stats = {
+    totalResponses: responses.length,
+    responsesSubmitted: responses.filter((r) => r.status === RESPONSE_STATUS.SUBMITTED).length,
+    responsesVoided: responses.filter((r) => r.status === RESPONSE_STATUS.VOIDED).length,
+    responsesDraft: responses.filter((r) => r.status === RESPONSE_STATUS.DRAFT).length,
+    responsesToday: 0,
+  };
+
+  // Count responses submitted today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayISO = today.toISOString();
+
+  stats.responsesToday = responses.filter((r) => {
+    if (!r.submittedAt) return false;
+    return r.submittedAt >= todayISO;
+  }).length;
+
+  return stats;
 }
