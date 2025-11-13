@@ -12,11 +12,16 @@ require('dotenv').config();
 const client = new sdk.Client();
 const account = new sdk.Account(client);
 const users = new sdk.Users(client);
+const databases = new sdk.Databases(client);
 
 client
   .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
+
+// Constants
+const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+const USERS_COLLECTION_ID = process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION_ID;
 
 // Users to create
 const seedUsers = [
@@ -59,12 +64,33 @@ async function createUser(userData) {
       userData.name
     );
     
-    console.log(`✅ User created: ${user.$id}`);
+    console.log(`✅ User created in Auth: ${user.$id}`);
     
     // Update user labels (for role)
     if (userData.labels && userData.labels.length > 0) {
       await users.updateLabels(user.$id, userData.labels);
       console.log(`🏷️  Labels added: ${userData.labels.join(', ')}`);
+    }
+    
+    // Create user document in users collection
+    try {
+      await databases.createDocument(
+        DATABASE_ID,
+        USERS_COLLECTION_ID,
+        user.$id, // Use same ID as auth user
+        {
+          userId: user.$id,
+          email: userData.email,
+          role: userData.labels[0], // 'admin' or 'enumerator'
+          status: 'active',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      );
+      console.log(`✅ User document created in collection`);
+    } catch (dbError) {
+      console.error(`⚠️  Warning: Could not create user document:`, dbError.message);
+      // Continue even if collection insert fails
     }
     
     console.log(`✅ ${userData.name} (${userData.email}) created successfully!`);

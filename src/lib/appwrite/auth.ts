@@ -115,15 +115,17 @@ export async function getUser(): Promise<User> {
     );
     
     // Combine Appwrite account and user document data
+    // Name comes from Appwrite Auth, not users collection
     return {
       ...userDoc,
+      $id: appwriteAccount.$id,
       userId: userDoc.userId as string,
       email: appwriteAccount.email,
       name: appwriteAccount.name,
       role: userDoc.role as 'admin' | 'enumerator',
-      status: userDoc.status as 'active' | 'suspended',
-      createdAt: userDoc.$createdAt,
-      updatedAt: userDoc.$updatedAt,
+      status: (userDoc.status || 'active') as 'active' | 'suspended',
+      createdAt: userDoc.createdAt || userDoc.$createdAt,
+      updatedAt: userDoc.updatedAt || userDoc.$updatedAt,
     } as User;
   } catch (error) {
     console.error('Get user error:', error);
