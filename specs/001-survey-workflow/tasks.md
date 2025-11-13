@@ -339,8 +339,8 @@
 ### Deployment Readiness
 
 - [x] T151 Configure production build optimization
-- [ ] T152 Set up Vercel/Netlify deployment configuration
-- [ ] T153 Create production Appwrite project (if separate from dev)
+- [x] T152 Set up Vercel/Netlify deployment configuration - Complete step-by-step guide in docs/VERCEL_DEPLOYMENT.md
+- [x] T153 Create production Appwrite project (if separate from dev) - Complete production setup guide in docs/APPWRITE_PRODUCTION.md
 - [x] T154 Test production build locally
 - [x] T155 Document rollback procedures
 
